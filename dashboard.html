@@ -1,0 +1,1179 @@
+<html lang="pt-BR"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard CX · 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=DM+Serif+Display&amp;display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<style>
+:root{--bg:#f4f3ef;--surface:#fff;--s2:#fafaf7;--border:#e6e3db;--text:#1e1d1a;--t2:#7a776f;--muted:#aeaa9f;--green:#2f7a3b;--gbg:#e8f5ea;--red:#c0392b;--rbg:#fdecea;--amber:#b86c1a;--ambg:#fdf3e6;--yc:#fef9ec;--yb:#f0d98a;--r:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:13px}
+.hdr{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300}
+.hbrand{display:flex;align-items:center;gap:10px}
+.htitle{font-family:'DM Serif Display',serif;font-size:16px}.hsub{font-size:10px;color:var(--muted)}
+.ytag{background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px}
+.tabs{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex}
+.tab{padding:11px 16px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:.15s;letter-spacing:.05em;text-transform:uppercase}
+.tab:hover{color:var(--text)}.tab.active{color:var(--green);border-bottom-color:var(--green)}
+.av{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff}
+.page{padding:20px 24px;max-width:1500px;margin:0 auto}
+.panel{display:none}.panel.active{display:block}
+.sec{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.sec span{color:var(--text)}.sec-tag{font-size:9px;font-weight:700;background:var(--green);color:#fff;padding:2px 7px;border-radius:3px}
+.kpi-row{display:grid;gap:1px;background:var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px;border:1px solid var(--border)}
+.kpi-6{grid-template-columns:repeat(6,1fr)}.kpi-4{grid-template-columns:repeat(4,1fr)}.kpi-3{grid-template-columns:repeat(3,1fr)}
+.kpi-card{background:var(--surface);padding:15px 16px;position:relative}
+.kpi-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--border)}
+.kpi-card.ok::after{background:var(--green)}.kpi-card.bad::after{background:var(--red)}.kpi-card.warn::after{background:var(--amber)}
+.kpi-label{font-size:8px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.kpi-val{font-size:24px;font-weight:600;line-height:1;margin-bottom:4px}
+.kpi-val.ok{color:var(--green)}.kpi-val.bad{color:var(--red)}.kpi-val.warn{color:var(--amber)}.kpi-val.none{color:var(--t2)}
+.kpi-sub{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.kbadge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px}
+.kbadge.ok{background:var(--gbg);color:var(--green)}.kbadge.bad{background:var(--rbg);color:var(--red)}.kbadge.warn{background:var(--ambg);color:var(--amber)}
+.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:16px}
+.cblabel{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t2);margin-bottom:2px;display:flex;align-items:center;gap:6px}
+.cblabel .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}.cbsub{font-size:10px;color:var(--muted);margin-bottom:10px}
+.tbl-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:16px}
+table{width:100%;border-collapse:collapse}
+thead th{padding:8px 10px;font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--s2);border-bottom:1px solid var(--border);white-space:nowrap;text-align:center}
+thead th:first-child{padding-left:14px;text-align:left}
+tbody td{padding:0;border-bottom:1px solid #f0ede6;vertical-align:middle;height:38px;text-align:center}
+tbody tr:last-child td{border-bottom:none}tbody tr:hover td{background:#fafaf6}
+.tl{padding:0 10px 0 14px;font-size:11px;font-weight:600;color:var(--text);white-space:nowrap;text-align:left}
+.tv{padding:0 10px;font-size:12px;font-weight:500;color:var(--text);white-space:nowrap}
+.mrow td{background:#f7f5ef;border-bottom:2px solid var(--border)!important}
+.mrow .tl{font-size:9px;font-weight:700;color:var(--red);letter-spacing:.04em;text-transform:uppercase}
+td.ec{padding:0;background:var(--yc)}
+.ci{width:100%;height:38px;border:none;outline:none;background:var(--yc);text-align:center;font-size:12px;font-weight:600;font-family:'DM Sans',sans-serif;color:var(--text);padding:0 4px}
+.ci:focus{background:#fffae8;box-shadow:inset 0 0 0 1.5px #e0c060}.ci::placeholder{color:#d4c08a;font-weight:400;font-size:11px}
+.sb{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap}
+.sb.ok{background:var(--gbg);color:var(--green)}.sb.bad{background:var(--rbg);color:var(--red)}
+.sb.warn{background:var(--ambg);color:var(--amber)}.sb.none{background:#f0ede8;color:var(--muted)}
+.vok{color:var(--green);font-weight:700}.vbad{color:var(--red);font-weight:700}.vwarn{color:var(--amber);font-weight:700}
+.btn{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:7px 13px;border-radius:6px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.15s}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#256630}
+.btn-blue{background:#3b6faa;color:#fff}.btn-blue:hover{background:#2d5585}
+.btn-outline{background:var(--surface);color:var(--t2);border:1.5px solid var(--border)}.btn-outline:hover{background:var(--s2)}
+.tds{padding:0 12px;text-align:center}
+.hint{background:var(--ambg);border-top:1px solid #f0d090;padding:7px 14px;font-size:10px;color:var(--amber);font-weight:500}
+.hint-ro{background:var(--s2);border-top:1px solid var(--border);padding:7px 14px;font-size:10px;color:var(--t2)}
+.toast{position:fixed;bottom:24px;right:24px;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:700;color:#fff;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2);opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+.meta-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px}
+.meta-val{font-size:22px;font-weight:700;color:var(--text);display:flex;align-items:baseline;gap:8px;margin:2px 0 6px}
+.meta-arrow{font-size:12px;font-weight:700}
+.tag-pill{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;margin-top:3px}
+@media(max-width:1100px){.kpi-6{grid-template-columns:repeat(3,1fr)}.kpi-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.page{padding:14px 12px}.kpi-6{grid-template-columns:repeat(2,1fr)}}
+</style>
+<script id="cx-snap">(function(){window.__snap={"tc":[{"solic":415,"respostas":78,"csat":91,"neutro":3,"neg":6},{"solic":424,"respostas":74,"csat":89,"neutro":5,"neg":5},{"solic":436,"respostas":85,"csat":89,"neutro":4,"neg":7},{"solic":304,"respostas":52,"csat":92,"neutro":2,"neg":6},{"solic":100,"respostas":23,"csat":100,"neutro":0,"neg":0},null,null,null,null,null,null,null],"tk":[[514,642,605,367,138,null,null,null,null,null,null,null],[48,29,26,16,20,null,null,null,null,null,null,null],[37,37.1,32.9,19.7,35.5,null,null,null,null,null,null,null],[23.3,23.3,21.4,15.4,19.6,null,null,null,null,null,null,null],[25,33,33,44,39,null,null,null,null,null,null,null],[90,94,95,97,93,null,null,null,null,null,null,null]],"ic":[{"solic":446,"respostas":58,"csat":74,"neutro":7,"neg":19},{"solic":420,"respostas":55,"csat":71,"neutro":8,"neg":21},{"solic":462,"respostas":79,"csat":75,"neutro":3,"neg":23},{"solic":296,"respostas":29,"csat":79,"neutro":3,"neg":17},{"solic":94,"respostas":15,"csat":80,"neutro":7,"neg":13},null,null,null,null,null,null,null],"ik":[[520,510,558,361,149,null,null,null,null,null,null,null],[50,32,10,6,5,null,null,null,null,null,null,null],[35,38,34.5,42.3,49.6,null,null,null,null,null,null,null],[25,24,28.7,15.9,16.5,null,null,null,null,null,null,null],[29,47,65,62,56,null,null,null,null,null,null,null],[86,97,99,97,100,null,null,null,null,null,null,null]],"gc":[null,null,{"solic":68,"respostas":10,"csat":90,"neutro":10,"neg":0},{"solic":261,"respostas":34,"csat":85,"neutro":6,"neg":9},{"solic":90,"respostas":18,"csat":83,"neutro":6,"neg":11},null,null,null,null,null,null,null],"gk":[[null,null,93,381,149,null,null,null,null,null,null,null],[null,null,54,24,32,null,null,null,null,null,null,null],[null,null,29.2,31.9,36.1,null,null,null,null,null,null,null],[null,null,7.7,10.2,105,null,null,null,null,null,null,null],[null,null,null,32,42,null,null,null,null,null,null,null],[null,null,null,91,100,null,null,null,null,null,null,null]],"ao":[null,null,null,null,null,null,null,null,null,null,null,null]};})()</script></head>
+<body>
+
+<div class="toast" id="toast" style="background: var(--green);">💾 Dados salvos!</div>
+
+<!-- LOGIN OVERLAY -->
+<div id="cx-login" style="position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;">
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:40px 44px;width:340px;text-align:center;box-shadow:0 12px 48px rgba(0,0,0,.10)">
+    <div style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);margin-bottom:4px">CX Analytics</div>
+    <div style="font-size:11px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:30px">Customer Experience · 2026</div>
+    <input type="password" id="cx-pw" placeholder="Digite sua senha de acesso"
+      style="width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;background:var(--s2);color:var(--text);box-sizing:border-box;margin-bottom:8px"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <div id="cx-err" style="color:var(--red);font-size:11px;margin-bottom:10px;min-height:16px;display:none">Senha incorreta. Tente novamente.</div>
+    <button onclick="doLogin()" style="width:100%;padding:11px 0;background:var(--green);color:#fff;border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer">Entrar</button>
+    <div style="font-size:10px;color:var(--muted);margin-top:18px">Tania Bulhoes - Dashboard Interno</div>
+  </div>
+</div>
+
+<header class="hdr">
+  <div class="hbrand">
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAA5AGQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD3+iiigAooooAKKKTIoAWikBBpaACiiigAooooAKKKKACiiigAooooASud8Q6w+nW/lW6nz5shD0H0B7ORkjPXFdFXNeJdEm1CAz2uGmVCjQsflmTOcH0YHkH1qZXtoTO9tCh4Q1yWeGGxnaSY+XujlOS20Z5c9gTwvc4NdoOa4nwhoN1CkV5fK8IXLRwN95mIxvf3xwB2rtgMUoXtqKF7ai0UUVZYUUUUAFFFFACdqy4tW8y+e0+yXSsuCXZRtAOcHOenFanase80+eaa8aGdYzcQpCGxkoATuP1w3HvUu/QTJP7Xsf7PN8Zf9HEnll8dDu28+2e/40+TUoYp/KO5j+7OV5GHbaOfr+lZq6JcR+ZGLlJIXaJyrRhcFCOgHHKjH1FPGgmG4d4pSIS8TJE3SMI+4gH0PYdqLsV2ai30D30lmsg8+NA7L7H/AD+oqteaxDZXHlSRzEKgeR0XKopJGT36iqcOjXsd1HdteK0omaSRPLwCG4Zc9cAAY+lJq+iz31600fkbWhWMPJu3RkEncuOp5pXdgbdjRfVLdLee4bfshl8luOd2QOPbJFKdUt0sproh/LidkbjnIbaf1qhJpN2zS24liNpNMszswPmAgqSB25K/hmmvpN/JbXlk7W32ed3dWy275m3YI6etO7C7NG61O3tXdZSy7IvNJxxjOAPrntVG31to45zfRNC8aGVYxGQWQdSMnk5I/MUkvh9BNI1rtgDRKAeWIdXDA8npxTbnS7/UIpvtMsCuIXiiWPcVywwWYn6dB0pXkGpbOsbFjD2d0ssrEJDtG8gDJPXGK1VOQDyMjvXOSaRdyacLYQWSYYlSGk+QkcMp6gg5rehV0jRXYuyqAWPG4460031GieiiiqGJS0UUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAf/Z" style="width:36px;height:36px;object-fit:contain">
+    <div><div class="htitle">CX Analytics</div><div class="hsub">Customer Experience · Indicadores Operacionais</div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <span class="ytag">2026</span>
+    <span style="font-size:10px;color:var(--muted);background:var(--yc);border:1px solid var(--yb);padding:3px 9px;border-radius:4px">📝 Amarelo = editável · 💾 Salvar = baixar nova versão</span>
+    <button class="btn btn-green" onclick="saveAndRefresh()">💾 Salvar</button>
+    <button class="btn btn-green" onclick="saveData('cx')">💾 Salvar dashboard_cx</button>
+    <button id="cx-logout" class="btn btn-outline" onclick="doLogout()" style="display:none">🔒 Sair</button>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tab" onclick="showTab('metas',this)">🎯 Metas 2026</div>
+  <div class="tab" onclick="showTab('area',this)">🏢 Área</div>
+  <div class="tab active" onclick="showTab('isabela',this)"><span class="av" style="background:#5570a0">IM</span> Isabela Mesquita</div>
+  <div class="tab" onclick="showTab('tayna',this)"><span class="av" style="background:#2f7a3b">TM</span> Tayna Moura</div>
+  <div class="tab" onclick="showTab('gabriel',this)"><span class="av" style="background:#8b4513">GH</span> Gabriel Henrique</div>
+</nav>
+
+<div class="page">
+
+<div id="tab-area" class="panel">
+  <div class="sec" style="margin-top:4px">KPIs Operacionais — <span>Área · Último mês</span> <span class="sec-tag" id="area-kpi-tag">Mai/26</span></div>
+  <div class="kpi-row kpi-6" id="area-kpis"><div class="kpi-card none"><div class="kpi-label">Total de Tickets</div><div class="kpi-val none">436</div><div class="kpi-sub">Volume </div></div><div class="kpi-card bad"><div class="kpi-label">Tempo Médio 1ª Resposta</div><div class="kpi-val bad">19 min</div><div class="kpi-sub">≤12 min <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">Resolvidos no 1° Contato</div><div class="kpi-val bad">40,5%</div><div class="kpi-sub">≥50% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">Tickets Reabertos</div><div class="kpi-val bad">47,7%</div><div class="kpi-sub">≤15% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">SLA WhatsApp</div><div class="kpi-val bad">45,8%</div><div class="kpi-sub">≥60% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card ok"><div class="kpi-label">SLA E-mail</div><div class="kpi-val ok">97,8%</div><div class="kpi-sub">≥95% <span class="kbadge ok">✅ Acima</span></div></div></div>
+  <div class="sec">CSAT — Acumulado do Ano · <span>Área</span> <span class="sec-tag" id="area-csat-tag">Mai/26</span></div>
+  <div class="kpi-row kpi-6" id="area-csat-kpis"><div class="kpi-card warn"><div class="kpi-label">CSAT Médio (YTD)</div><div class="kpi-val warn">84.7%</div><div class="kpi-sub">Meta ≥90% <span class="kbadge warn">⚠️ Atenção</span></div></div>
+<div class="kpi-card bad"><div class="kpi-label">Negativo Médio</div><div class="kpi-val bad">10.8%</div><div class="kpi-sub">Meta ≤6% <span class="kbadge bad">⚠️ Abaixo</span></div></div>
+<div class="kpi-card warn"><div class="kpi-label">Neutro Médio</div><div class="kpi-val warn">4.4%</div><div class="kpi-sub">Meta ≤4% <span class="kbadge warn">⚠️ Atenção</span></div></div>
+<div class="kpi-card bad"><div class="kpi-label">Tx. Resposta (YTD)</div><div class="kpi-val bad">16%</div><div class="kpi-sub">Meta ≥25% <span class="kbadge bad">⚠️ Abaixo</span></div></div>
+<div class="kpi-card none"><div class="kpi-label">Total Solicitações</div><div class="kpi-val none">3.816</div><div class="kpi-sub">Acumulado </div></div>
+<div class="kpi-card none"><div class="kpi-label">Total Respostas</div><div class="kpi-val none">610</div><div class="kpi-sub">Acumulado </div></div></div>
+  <div class="sec">CSAT — <span>Mês a Mês · Área</span></div>
+  <div class="chart-box">
+    <div class="cblabel"><span class="dot" style="background:#2f7a3b"></span>CSAT Médio da Área</div>
+    <canvas id="cA_csat" height="90"></canvas>
+  </div>
+  <div class="sec">Tabela CSAT — <span>Área · 2026</span></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th style="width:60px">Mês</th><th>Solicitações</th><th>Respostas</th><th>Tx. Resp.</th><th>CSAT %</th><th>Neutro %</th><th>Negativo %</th><th>Status</th></tr></thead>
+    <tbody id="area-csat-tbody"><tr class="mrow"><td class="tl">🔴 Meta</td><td class="tv">—</td><td class="tv">—</td><td class="tv" style="color:var(--amber);font-weight:700">≥25%</td><td class="tv" style="color:var(--green);font-weight:700">≥90%</td><td class="tv" style="color:var(--amber);font-weight:700">≤4%</td><td class="tv" style="color:var(--red);font-weight:700">≤6%</td><td></td></tr><tr><td class="tl">Jan</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(0,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(0,'respostas',this.value)"></td><td class="tv" id="area-tx-0"><span class="vbad">16%</span></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(0,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(0,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(0,'neg',this.value)"></td><td class="tds"><span class="sb warn" id="area-rst-0">⚠️ Atenção</span></td></tr><tr><td class="tl">Fev</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(1,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(1,'respostas',this.value)"></td><td class="tv" id="area-tx-1"><span class="vbad">15%</span></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(1,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(1,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(1,'neg',this.value)"></td><td class="tds"><span class="sb warn" id="area-rst-1">⚠️ Atenção</span></td></tr><tr><td class="tl">Mar</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(2,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(2,'respostas',this.value)"></td><td class="tv" id="area-tx-2"><span class="vbad">18%</span></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(2,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(2,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(2,'neg',this.value)"></td><td class="tds"><span class="sb warn" id="area-rst-2">⚠️ Atenção</span></td></tr><tr><td class="tl">Abr</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(3,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(3,'respostas',this.value)"></td><td class="tv" id="area-tx-3"><span class="vbad">13%</span></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(3,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(3,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(3,'neg',this.value)"></td><td class="tds"><span class="sb warn" id="area-rst-3">⚠️ Atenção</span></td></tr><tr><td class="tl">Mai</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(4,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(4,'respostas',this.value)"></td><td class="tv" id="area-tx-4"><span class="vbad">20%</span></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(4,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(4,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(4,'neg',this.value)"></td><td class="tds"><span class="sb warn" id="area-rst-4">⚠️ Atenção</span></td></tr><tr><td class="tl">Jun</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(5,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(5,'respostas',this.value)"></td><td class="tv" id="area-tx-5"><span style="color:var(--muted)">—</span></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(5,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(5,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(5,'neg',this.value)"></td><td class="tds"><span class="sb none" id="area-rst-5">—</span></td></tr><tr><td class="tl">Jul</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(6,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(6,'respostas',this.value)"></td><td class="tv" id="area-tx-6"><span style="color:var(--muted)">—</span></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(6,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(6,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(6,'neg',this.value)"></td><td class="tds"><span class="sb none" id="area-rst-6">—</span></td></tr><tr><td class="tl">Ago</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(7,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(7,'respostas',this.value)"></td><td class="tv" id="area-tx-7"><span style="color:var(--muted)">—</span></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(7,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(7,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(7,'neg',this.value)"></td><td class="tds"><span class="sb none" id="area-rst-7">—</span></td></tr><tr><td class="tl">Set</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(8,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(8,'respostas',this.value)"></td><td class="tv" id="area-tx-8"><span style="color:var(--muted)">—</span></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(8,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(8,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(8,'neg',this.value)"></td><td class="tds"><span class="sb none" id="area-rst-8">—</span></td></tr><tr><td class="tl">Out</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(9,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(9,'respostas',this.value)"></td><td class="tv" id="area-tx-9"><span style="color:var(--muted)">—</span></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(9,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(9,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(9,'neg',this.value)"></td><td class="tds"><span class="sb none" id="area-rst-9">—</span></td></tr><tr><td class="tl">Nov</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(10,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(10,'respostas',this.value)"></td><td class="tv" id="area-tx-10"><span style="color:var(--muted)">—</span></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(10,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(10,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(10,'neg',this.value)"></td><td class="tds"><span class="sb none" id="area-rst-10">—</span></td></tr><tr><td class="tl">Dez</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(11,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onAreaCsatOverride(11,'respostas',this.value)"></td><td class="tv" id="area-tx-11"><span style="color:var(--muted)">—</span></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(11,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(11,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" onchange="onAreaCsatOverride(11,'neg',this.value)"></td><td class="tds"><span class="sb none" id="area-rst-11">—</span></td></tr></tbody>
+  </table><div class="hint">📝 Preencha com os valores reais da equipe completa (inclui ex-colaboradores). Quando preenchido, substitui o cálculo automático T+I+G no gráfico e nos cards.</div></div>
+  <div class="sec">Tabela KPIs — <span>Área · 2026</span></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th style="min-width:160px">Indicador</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th><th>Meta</th><th>Atingimento</th></tr></thead>
+    <tbody id="area-kpi-tbody"><tr><td class="tl">Total de Tickets</td><td class="tv" style="color:var(--muted)">1034</td><td class="tv" style="color:var(--muted)">1152</td><td class="tv" style="color:var(--muted)">1256</td><td class="tv" style="color:var(--muted)">1109</td><td class="tv" style="color:var(--muted)">436</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--t2);font-size:11px">—</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--muted);background:#f0ede8">—</span></td></tr><tr><td class="tl">Tempo Médio 1ª Resposta</td><td class="tv" style="color:var(--red)">49 min</td><td class="tv" style="color:var(--red)">30,3 min</td><td class="tv" style="color:var(--red)">21 min</td><td class="tv" style="color:var(--red)">15,5 min</td><td class="tv" style="color: var(--red);">19 min</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--t2);font-size:11px">≤12 min</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">0%</span></td></tr><tr><td class="tl">Resolvidos no 1° Contato</td><td class="tv" style="color:var(--red)">36%</td><td class="tv" style="color:var(--red)">37,5%</td><td class="tv" style="color:var(--red)">33,3%</td><td class="tv" style="color:var(--red)">31,2%</td><td class="tv" style="color: var(--red);">40,5%</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--t2);font-size:11px">≥50%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">0%</span></td></tr><tr><td class="tl">Tickets Reabertos</td><td class="tv" style="color:var(--red)">24,2%</td><td class="tv" style="color:var(--red)">23,6%</td><td class="tv" style="color:var(--red)">23,6%</td><td class="tv" style="color:var(--green)">13,8%</td><td class="tv" style="color: var(--red);">47,7%</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--t2);font-size:11px">≤15%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">20%</span></td></tr><tr><td class="tl">SLA WhatsApp</td><td class="tv" style="color:var(--red)">27%</td><td class="tv" style="color:var(--red)">39,2%</td><td class="tv" style="color:var(--red)">48,4%</td><td class="tv" style="color:var(--red)">45,7%</td><td class="tv" style="color: var(--red);">45,8%</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--t2);font-size:11px">≥60%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">0%</span></td></tr><tr><td class="tl">SLA E-mail</td><td class="tv" style="color:var(--amber)">88%</td><td class="tv" style="color:var(--green)">95,3%</td><td class="tv" style="color:var(--green)">96,9%</td><td class="tv" style="color: var(--amber);">94,9%</td><td class="tv" style="color: var(--green);">97,8%</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--muted)">—</td><td class="tv" style="color:var(--t2);font-size:11px">≥95%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--amber);background:var(--ambg)">60%</span></td></tr></tbody>
+  </table><div class="hint-ro">📊 Calculado automaticamente a partir de Tayna + Isabela + Gabriel</div></div>
+</div>
+
+<div id="tab-tayna" class="panel">  <div style="display:flex;align-items:center;gap:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 22px;margin-bottom:16px;margin-top:4px">
+    <img src="data:image/jpeg;base64,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" style="width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:center top;border:2px solid var(--border);flex-shrink:0">
+    <div>
+      <div style="font-family:'DM Serif Display',serif;font-size:20px">Tayna Moura</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">Analista de Experiência do Cliente</div>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <button class="btn btn-green" style="font-size:10px;padding:5px 11px" onclick="downloadPersonHTML('t')">💾 Salvar</button>
+      <span id="t-stars" style="font-size:18px;letter-spacing:2px"><span style="color:#f5a623">★</span><span style="color:#f5a623">★</span><span style="color:#f5a623">★</span><span style="color:#f5a623">★</span><span style="display:inline-block;position:relative;color:#e6e3db">★<span style="position:absolute;left:0;top:0;width:3%;overflow:hidden;color:#f5a623">★</span></span></span>
+      <span class="sec-tag" id="t-period-tag">Mai/26</span>
+    </div>
+  </div>
+  <div class="sec">KPIs Operacionais — <span>Último mês · Tayna Moura</span></div>
+  <div class="kpi-row kpi-6" id="t-kpis"><div class="kpi-card none"><div class="kpi-label">Total de Tickets</div><div class="kpi-val none">138</div><div class="kpi-sub">Volume </div></div><div class="kpi-card bad"><div class="kpi-label">Tempo Médio 1ª Resposta</div><div class="kpi-val bad">20 min</div><div class="kpi-sub">≤12 min <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">Resolvidos no 1° Contato</div><div class="kpi-val bad">35,5%</div><div class="kpi-sub">≥50% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">Tickets Reabertos</div><div class="kpi-val bad">19,6%</div><div class="kpi-sub">≤15% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">SLA WhatsApp</div><div class="kpi-val bad">39%</div><div class="kpi-sub">≥60% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card warn"><div class="kpi-label">SLA E-mail</div><div class="kpi-val warn">93%</div><div class="kpi-sub">≥95% <span class="kbadge warn">⚠️ Atenção</span></div></div></div>
+  <div class="sec">CSAT — <span>Mês Atual · Tayna Moura</span></div>
+  <div class="kpi-row kpi-4" id="t-csat-mes-kpis"><div class="kpi-card ok"><div class="kpi-label">CSAT · Mai/26</div><div class="kpi-val ok">100%</div><div class="kpi-sub">Meta ≥90% <span class="kbadge ok">✅ Acima</span></div></div><div class="kpi-card ok"><div class="kpi-label">Negativo · Mai/26</div><div class="kpi-val ok">0%</div><div class="kpi-sub">Meta ≤6% <span class="kbadge ok">✅ Acima</span></div></div><div class="kpi-card ok"><div class="kpi-label">Neutro · Mai/26</div><div class="kpi-val ok">0%</div><div class="kpi-sub">Meta ≤4% <span class="kbadge ok">✅ Acima</span></div></div><div class="kpi-card warn"><div class="kpi-label">Tx. Resp. · Mai/26</div><div class="kpi-val warn">23%</div><div class="kpi-sub">Meta ≥25% <span class="kbadge warn">⚠️ Atenção</span></div></div></div>
+  <div class="sec">CSAT — <span>Acumulado do Ano · Tayna Moura</span></div>
+  <div class="kpi-row kpi-6" id="t-csat-kpis"><div class="kpi-card ok"><div class="kpi-label">CSAT Médio (YTD)</div><div class="kpi-val ok">92.2%</div><div class="kpi-sub">Meta ≥90% <span class="kbadge ok">✅ Acima</span></div></div>
+<div class="kpi-card ok"><div class="kpi-label">Negativo Médio</div><div class="kpi-val ok">4.8%</div><div class="kpi-sub">Meta ≤6% <span class="kbadge ok">✅ Acima</span></div></div>
+<div class="kpi-card ok"><div class="kpi-label">Neutro Médio</div><div class="kpi-val ok">2.8%</div><div class="kpi-sub">Meta ≤4% <span class="kbadge ok">✅ Acima</span></div></div>
+<div class="kpi-card bad"><div class="kpi-label">Tx. Resposta (YTD)</div><div class="kpi-val bad">19%</div><div class="kpi-sub">Meta ≥25% <span class="kbadge bad">⚠️ Abaixo</span></div></div>
+<div class="kpi-card none"><div class="kpi-label">Total Solicitações</div><div class="kpi-val none">1.679</div><div class="kpi-sub">Acumulado </div></div>
+<div class="kpi-card none"><div class="kpi-label">Total Respostas</div><div class="kpi-val none">312</div><div class="kpi-sub">Acumulado </div></div></div>
+  <div class="sec">CSAT — <span>Tayna Moura · Meta vs Alcançado</span></div>
+  <div class="chart-box">
+    <div class="cblabel"><span class="dot" style="background:#2f7a3b"></span>CSAT % · Meta ≥90% · Comparativo Mensal</div>
+    <div class="cbsub">Barras = alcançado · Linha tracejada = meta</div>
+    <canvas id="cT_csat" height="100"></canvas>
+  </div>
+  <div class="sec">Tabela CSAT — <span>Tayna Moura · 2026</span></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th style="width:60px">Mês</th><th>Solicitações</th><th>Respostas</th><th>Tx. Resp.</th><th>CSAT %</th><th>Neutro %</th><th>Negativo %</th><th>Status</th></tr></thead>
+    <tbody id="t-csat-tbody"><tr class="mrow"><td class="tl">🔴 Meta</td><td class="tv">—</td><td class="tv">—</td>
+    <td class="tv" style="color:var(--amber);font-weight:700">≥25%</td>
+    <td class="tv" style="color:var(--green);font-weight:700">≥90%</td>
+    <td class="tv" style="color:var(--amber);font-weight:700">≤4%</td>
+    <td class="tv" style="color:var(--red);font-weight:700">≤6%</td><td></td></tr><tr><td class="tl">Jan</td><td class="ec"><input class="ci" type="number" step="1" value="415" placeholder="—" onchange="onCsatChange('t-csat-tbody',0,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="78" placeholder="—" onchange="onCsatChange('t-csat-tbody',0,'respostas',this.value)"></td>
+      <td class="tv" id="t-tx-0"><span class="vbad">19%</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="91" placeholder="—" style="color:var(--green)" onchange="onCsatChange('t-csat-tbody',0,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="3" placeholder="—" style="color:var(--green)" onchange="onCsatChange('t-csat-tbody',0,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="6" placeholder="—" style="color:var(--green)" onchange="onCsatChange('t-csat-tbody',0,'neg',this.value)"></td>
+      <td class="tds"><span class="sb ok" id="t-rst-0">✅ Acima</span></td></tr><tr><td class="tl">Fev</td><td class="ec"><input class="ci" type="number" step="1" value="424" placeholder="—" onchange="onCsatChange('t-csat-tbody',1,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="74" placeholder="—" onchange="onCsatChange('t-csat-tbody',1,'respostas',this.value)"></td>
+      <td class="tv" id="t-tx-1"><span class="vbad">17%</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="89" placeholder="—" style="color:var(--amber)" onchange="onCsatChange('t-csat-tbody',1,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="5" placeholder="—" style="color:var(--red)" onchange="onCsatChange('t-csat-tbody',1,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="5" placeholder="—" style="color:var(--green)" onchange="onCsatChange('t-csat-tbody',1,'neg',this.value)"></td>
+      <td class="tds"><span class="sb warn" id="t-rst-1">⚠️ Atenção</span></td></tr><tr><td class="tl">Mar</td><td class="ec"><input class="ci" type="number" step="1" value="436" placeholder="—" onchange="onCsatChange('t-csat-tbody',2,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="85" placeholder="—" onchange="onCsatChange('t-csat-tbody',2,'respostas',this.value)"></td>
+      <td class="tv" id="t-tx-2"><span class="vbad">19%</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="89" placeholder="—" style="color:var(--amber)" onchange="onCsatChange('t-csat-tbody',2,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="4" placeholder="—" style="color:var(--green)" onchange="onCsatChange('t-csat-tbody',2,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="7" placeholder="—" style="color:var(--red)" onchange="onCsatChange('t-csat-tbody',2,'neg',this.value)"></td>
+      <td class="tds"><span class="sb warn" id="t-rst-2">⚠️ Atenção</span></td></tr><tr><td class="tl">Abr</td><td class="ec"><input class="ci" type="number" step="1" value="304" placeholder="—" onchange="onCsatChange('t-csat-tbody',3,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="52" placeholder="—" onchange="onCsatChange('t-csat-tbody',3,'respostas',this.value)"></td>
+      <td class="tv" id="t-tx-3"><span class="vbad">17%</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="92" placeholder="—" style="color:var(--green)" onchange="onCsatChange('t-csat-tbody',3,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="2" placeholder="—" style="color:var(--green)" onchange="onCsatChange('t-csat-tbody',3,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="6" placeholder="—" style="color:var(--green)" onchange="onCsatChange('t-csat-tbody',3,'neg',this.value)"></td>
+      <td class="tds"><span class="sb ok" id="t-rst-3">✅ Acima</span></td></tr><tr><td class="tl">Mai</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',4,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',4,'respostas',this.value)"></td>
+      <td class="tv" id="t-tx-4"><span class="vwarn">23%</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',4,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',4,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',4,'neg',this.value)"></td>
+      <td class="tds"><span class="sb ok" id="t-rst-4">✅ Acima</span></td></tr><tr><td class="tl">Jun</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',5,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',5,'respostas',this.value)"></td>
+      <td class="tv" id="t-tx-5"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',5,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',5,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',5,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="t-rst-5">—</span></td></tr><tr><td class="tl">Jul</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',6,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',6,'respostas',this.value)"></td>
+      <td class="tv" id="t-tx-6"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',6,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',6,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',6,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="t-rst-6">—</span></td></tr><tr><td class="tl">Ago</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',7,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',7,'respostas',this.value)"></td>
+      <td class="tv" id="t-tx-7"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',7,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',7,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',7,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="t-rst-7">—</span></td></tr><tr><td class="tl">Set</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',8,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',8,'respostas',this.value)"></td>
+      <td class="tv" id="t-tx-8"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',8,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',8,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',8,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="t-rst-8">—</span></td></tr><tr><td class="tl">Out</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',9,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',9,'respostas',this.value)"></td>
+      <td class="tv" id="t-tx-9"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',9,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',9,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',9,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="t-rst-9">—</span></td></tr><tr><td class="tl">Nov</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',10,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',10,'respostas',this.value)"></td>
+      <td class="tv" id="t-tx-10"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',10,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',10,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',10,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="t-rst-10">—</span></td></tr><tr><td class="tl">Dez</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',11,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('t-csat-tbody',11,'respostas',this.value)"></td>
+      <td class="tv" id="t-tx-11"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',11,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',11,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('t-csat-tbody',11,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="t-rst-11">—</span></td></tr></tbody>
+  </table><div class="hint">📝 Células em amarelo são editáveis · Tx. Resp. calculada automaticamente</div></div>
+  <div class="sec">Tabela KPIs — <span>Tayna Moura · 2026</span></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th style="min-width:160px">Indicador</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th><th>Meta</th><th>Atingimento</th></tr></thead>
+    <tbody id="t-kpi-tbody"><tr><td class="tl">Total de Tickets</td><td class="ec"><input class="ci" type="number" step="0.1" value="514" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',0,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="642" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',0,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="605" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',0,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="367" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',0,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',0,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',0,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',0,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',0,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',0,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',0,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',0,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',0,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">—</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--muted);background:#f0ede8">—</span></td></tr><tr><td class="tl">Tempo Médio 1ª Resposta</td><td class="ec"><input class="ci" type="number" step="0.1" value="48" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',1,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="29" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',1,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="26" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',1,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="16" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',1,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',1,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',1,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',1,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',1,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',1,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',1,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',1,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',1,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≤12 min</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">0%</span></td></tr><tr><td class="tl">Resolvidos no 1° Contato</td><td class="ec"><input class="ci" type="number" step="0.1" value="37" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',2,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="37.1" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',2,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="32.9" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',2,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="19.7" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',2,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',2,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',2,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',2,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',2,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',2,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',2,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',2,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',2,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≥50%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">0%</span></td></tr><tr><td class="tl">Tickets Reabertos</td><td class="ec"><input class="ci" type="number" step="0.1" value="23.3" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',3,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="23.3" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',3,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="21.4" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',3,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="15.4" placeholder="—" style="color:var(--amber)" onchange="onKpiChange('t-kpi-tbody',3,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',3,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',3,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',3,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',3,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',3,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',3,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',3,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',3,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≤15%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">0%</span></td></tr><tr><td class="tl">SLA WhatsApp</td><td class="ec"><input class="ci" type="number" step="0.1" value="25" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',4,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="33" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',4,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="33" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',4,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="44" placeholder="—" style="color:var(--red)" onchange="onKpiChange('t-kpi-tbody',4,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',4,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',4,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',4,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',4,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',4,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',4,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',4,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',4,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≥60%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">0%</span></td></tr><tr><td class="tl">SLA E-mail</td><td class="ec"><input class="ci" type="number" step="0.1" value="90" placeholder="—" style="color:var(--amber)" onchange="onKpiChange('t-kpi-tbody',5,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="94" placeholder="—" style="color:var(--amber)" onchange="onKpiChange('t-kpi-tbody',5,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="95" placeholder="—" style="color:var(--green)" onchange="onKpiChange('t-kpi-tbody',5,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="97" placeholder="—" style="color:var(--green)" onchange="onKpiChange('t-kpi-tbody',5,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',5,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',5,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',5,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',5,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',5,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',5,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',5,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('t-kpi-tbody',5,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≥95%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">40%</span></td></tr></tbody>
+  </table><div class="hint">📝 Células em amarelo são editáveis</div></div></div>
+<div id="tab-isabela" class="panel active">  <div style="display:flex;align-items:center;gap:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 22px;margin-bottom:16px;margin-top:4px">
+    <img src="data:image/jpeg;base64,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" style="width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:center top;border:2px solid var(--border);flex-shrink:0">
+    <div>
+      <div style="font-family:'DM Serif Display',serif;font-size:20px">Isabela Mesquita</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">Analista de Experiência do Cliente</div>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <button class="btn btn-green" style="font-size:10px;padding:5px 11px" onclick="downloadPersonHTML('i')">💾 Salvar</button>
+      <span id="i-stars" style="font-size:18px;letter-spacing:2px"><span style="color:#f5a623">★</span><span style="display:inline-block;position:relative;color:#e6e3db">★<span style="position:absolute;left:0;top:0;width:97%;overflow:hidden;color:#f5a623">★</span></span><span style="color:#e6e3db">★</span><span style="color:#e6e3db">★</span><span style="color:#e6e3db">★</span></span>
+      <span class="sec-tag" id="i-period-tag">Mai/26</span>
+    </div>
+  </div>
+  <div class="sec">KPIs Operacionais — <span>Último mês · Isabela Mesquita</span></div>
+  <div class="kpi-row kpi-6" id="i-kpis"><div class="kpi-card none"><div class="kpi-label">Total de Tickets</div><div class="kpi-val none">149</div><div class="kpi-sub">Volume </div></div><div class="kpi-card ok"><div class="kpi-label">Tempo Médio 1ª Resposta</div><div class="kpi-val ok">5 min</div><div class="kpi-sub">≤12 min <span class="kbadge ok">✅ Acima</span></div></div><div class="kpi-card warn"><div class="kpi-label">Resolvidos no 1° Contato</div><div class="kpi-val warn">49,6%</div><div class="kpi-sub">≥50% <span class="kbadge warn">⚠️ Atenção</span></div></div><div class="kpi-card warn"><div class="kpi-label">Tickets Reabertos</div><div class="kpi-val warn">16,5%</div><div class="kpi-sub">≤15% <span class="kbadge warn">⚠️ Atenção</span></div></div><div class="kpi-card warn"><div class="kpi-label">SLA WhatsApp</div><div class="kpi-val warn">56%</div><div class="kpi-sub">≥60% <span class="kbadge warn">⚠️ Atenção</span></div></div><div class="kpi-card ok"><div class="kpi-label">SLA E-mail</div><div class="kpi-val ok">100%</div><div class="kpi-sub">≥95% <span class="kbadge ok">✅ Acima</span></div></div></div>
+  <div class="sec">CSAT — <span>Mês Atual · Isabela Mesquita</span></div>
+  <div class="kpi-row kpi-4" id="i-csat-mes-kpis"><div class="kpi-card bad"><div class="kpi-label">CSAT · Mai/26</div><div class="kpi-val bad">80%</div><div class="kpi-sub">Meta ≥90% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">Negativo · Mai/26</div><div class="kpi-val bad">13%</div><div class="kpi-sub">Meta ≤6% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">Neutro · Mai/26</div><div class="kpi-val bad">7%</div><div class="kpi-sub">Meta ≤4% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">Tx. Resp. · Mai/26</div><div class="kpi-val bad">16%</div><div class="kpi-sub">Meta ≥25% <span class="kbadge bad">⚠️ Abaixo</span></div></div></div>
+  <div class="sec">CSAT — <span>Acumulado do Ano · Isabela Mesquita</span></div>
+  <div class="kpi-row kpi-6" id="i-csat-kpis"><div class="kpi-card bad"><div class="kpi-label">CSAT Médio (YTD)</div><div class="kpi-val bad">75.8%</div><div class="kpi-sub">Meta ≥90% <span class="kbadge bad">⚠️ Abaixo</span></div></div>
+<div class="kpi-card bad"><div class="kpi-label">Negativo Médio</div><div class="kpi-val bad">18.6%</div><div class="kpi-sub">Meta ≤6% <span class="kbadge bad">⚠️ Abaixo</span></div></div>
+<div class="kpi-card bad"><div class="kpi-label">Neutro Médio</div><div class="kpi-val bad">5.6%</div><div class="kpi-sub">Meta ≤4% <span class="kbadge bad">⚠️ Abaixo</span></div></div>
+<div class="kpi-card bad"><div class="kpi-label">Tx. Resposta (YTD)</div><div class="kpi-val bad">14%</div><div class="kpi-sub">Meta ≥25% <span class="kbadge bad">⚠️ Abaixo</span></div></div>
+<div class="kpi-card none"><div class="kpi-label">Total Solicitações</div><div class="kpi-val none">1.718</div><div class="kpi-sub">Acumulado </div></div>
+<div class="kpi-card none"><div class="kpi-label">Total Respostas</div><div class="kpi-val none">236</div><div class="kpi-sub">Acumulado </div></div></div>
+  <div class="sec">CSAT — <span>Isabela Mesquita · Meta vs Alcançado</span></div>
+  <div class="chart-box">
+    <div class="cblabel"><span class="dot" style="background:#5570a0"></span>CSAT % · Meta ≥90% · Comparativo Mensal</div>
+    <div class="cbsub">Barras = alcançado · Linha tracejada = meta</div>
+    <canvas id="cI_csat" height="100"></canvas>
+  </div>
+  <div class="sec">Tabela CSAT — <span>Isabela Mesquita · 2026</span></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th style="width:60px">Mês</th><th>Solicitações</th><th>Respostas</th><th>Tx. Resp.</th><th>CSAT %</th><th>Neutro %</th><th>Negativo %</th><th>Status</th></tr></thead>
+    <tbody id="i-csat-tbody"><tr class="mrow"><td class="tl">🔴 Meta</td><td class="tv">—</td><td class="tv">—</td>
+    <td class="tv" style="color:var(--amber);font-weight:700">≥25%</td>
+    <td class="tv" style="color:var(--green);font-weight:700">≥90%</td>
+    <td class="tv" style="color:var(--amber);font-weight:700">≤4%</td>
+    <td class="tv" style="color:var(--red);font-weight:700">≤6%</td><td></td></tr><tr><td class="tl">Jan</td><td class="ec"><input class="ci" type="number" step="1" value="446" placeholder="—" onchange="onCsatChange('i-csat-tbody',0,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="58" placeholder="—" onchange="onCsatChange('i-csat-tbody',0,'respostas',this.value)"></td>
+      <td class="tv" id="i-tx-0"><span class="vbad">13%</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="74" placeholder="—" style="color:var(--red)" onchange="onCsatChange('i-csat-tbody',0,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="7" placeholder="—" style="color:var(--red)" onchange="onCsatChange('i-csat-tbody',0,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="19" placeholder="—" style="color:var(--red)" onchange="onCsatChange('i-csat-tbody',0,'neg',this.value)"></td>
+      <td class="tds"><span class="sb bad" id="i-rst-0">⚠️ Abaixo</span></td></tr><tr><td class="tl">Fev</td><td class="ec"><input class="ci" type="number" step="1" value="420" placeholder="—" onchange="onCsatChange('i-csat-tbody',1,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="55" placeholder="—" onchange="onCsatChange('i-csat-tbody',1,'respostas',this.value)"></td>
+      <td class="tv" id="i-tx-1"><span class="vbad">13%</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="71" placeholder="—" style="color:var(--red)" onchange="onCsatChange('i-csat-tbody',1,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="8" placeholder="—" style="color:var(--red)" onchange="onCsatChange('i-csat-tbody',1,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="21" placeholder="—" style="color:var(--red)" onchange="onCsatChange('i-csat-tbody',1,'neg',this.value)"></td>
+      <td class="tds"><span class="sb bad" id="i-rst-1">⚠️ Abaixo</span></td></tr><tr><td class="tl">Mar</td><td class="ec"><input class="ci" type="number" step="1" value="462" placeholder="—" onchange="onCsatChange('i-csat-tbody',2,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="79" placeholder="—" onchange="onCsatChange('i-csat-tbody',2,'respostas',this.value)"></td>
+      <td class="tv" id="i-tx-2"><span class="vbad">17%</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="75" placeholder="—" style="color:var(--red)" onchange="onCsatChange('i-csat-tbody',2,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="3" placeholder="—" style="color:var(--green)" onchange="onCsatChange('i-csat-tbody',2,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="23" placeholder="—" style="color:var(--red)" onchange="onCsatChange('i-csat-tbody',2,'neg',this.value)"></td>
+      <td class="tds"><span class="sb bad" id="i-rst-2">⚠️ Abaixo</span></td></tr><tr><td class="tl">Abr</td><td class="ec"><input class="ci" type="number" step="1" value="296" placeholder="—" onchange="onCsatChange('i-csat-tbody',3,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="29" placeholder="—" onchange="onCsatChange('i-csat-tbody',3,'respostas',this.value)"></td>
+      <td class="tv" id="i-tx-3"><span class="vbad">10%</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="79" placeholder="—" style="color:var(--red)" onchange="onCsatChange('i-csat-tbody',3,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="3" placeholder="—" style="color:var(--green)" onchange="onCsatChange('i-csat-tbody',3,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="17" placeholder="—" style="color:var(--red)" onchange="onCsatChange('i-csat-tbody',3,'neg',this.value)"></td>
+      <td class="tds"><span class="sb bad" id="i-rst-3">⚠️ Abaixo</span></td></tr><tr><td class="tl">Mai</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',4,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',4,'respostas',this.value)"></td>
+      <td class="tv" id="i-tx-4"><span class="vbad">16%</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',4,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',4,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',4,'neg',this.value)"></td>
+      <td class="tds"><span class="sb bad" id="i-rst-4">⚠️ Abaixo</span></td></tr><tr><td class="tl">Jun</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',5,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',5,'respostas',this.value)"></td>
+      <td class="tv" id="i-tx-5"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',5,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',5,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',5,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="i-rst-5">—</span></td></tr><tr><td class="tl">Jul</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',6,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',6,'respostas',this.value)"></td>
+      <td class="tv" id="i-tx-6"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',6,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',6,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',6,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="i-rst-6">—</span></td></tr><tr><td class="tl">Ago</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',7,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',7,'respostas',this.value)"></td>
+      <td class="tv" id="i-tx-7"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',7,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',7,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',7,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="i-rst-7">—</span></td></tr><tr><td class="tl">Set</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',8,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',8,'respostas',this.value)"></td>
+      <td class="tv" id="i-tx-8"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',8,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',8,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',8,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="i-rst-8">—</span></td></tr><tr><td class="tl">Out</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',9,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',9,'respostas',this.value)"></td>
+      <td class="tv" id="i-tx-9"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',9,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',9,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',9,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="i-rst-9">—</span></td></tr><tr><td class="tl">Nov</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',10,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',10,'respostas',this.value)"></td>
+      <td class="tv" id="i-tx-10"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',10,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',10,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',10,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="i-rst-10">—</span></td></tr><tr><td class="tl">Dez</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',11,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('i-csat-tbody',11,'respostas',this.value)"></td>
+      <td class="tv" id="i-tx-11"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',11,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',11,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('i-csat-tbody',11,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="i-rst-11">—</span></td></tr></tbody>
+  </table><div class="hint">📝 Células em amarelo são editáveis · Tx. Resp. calculada automaticamente</div></div>
+  <div class="sec">Tabela KPIs — <span>Isabela Mesquita · 2026</span></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th style="min-width:160px">Indicador</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th><th>Meta</th><th>Atingimento</th></tr></thead>
+    <tbody id="i-kpi-tbody"><tr><td class="tl">Total de Tickets</td><td class="ec"><input class="ci" type="number" step="0.1" value="520" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',0,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="510" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',0,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="558" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',0,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="361" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',0,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',0,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',0,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',0,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',0,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',0,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',0,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',0,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',0,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">—</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--muted);background:#f0ede8">—</span></td></tr><tr><td class="tl">Tempo Médio 1ª Resposta</td><td class="ec"><input class="ci" type="number" step="0.1" value="50" placeholder="—" style="color:var(--red)" onchange="onKpiChange('i-kpi-tbody',1,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="32" placeholder="—" style="color:var(--red)" onchange="onKpiChange('i-kpi-tbody',1,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="10" placeholder="—" style="color:var(--green)" onchange="onKpiChange('i-kpi-tbody',1,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="6" placeholder="—" style="color:var(--green)" onchange="onKpiChange('i-kpi-tbody',1,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',1,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',1,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',1,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',1,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',1,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',1,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',1,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',1,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≤12 min</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--amber);background:var(--ambg)">60%</span></td></tr><tr><td class="tl">Resolvidos no 1° Contato</td><td class="ec"><input class="ci" type="number" step="0.1" value="35" placeholder="—" style="color:var(--red)" onchange="onKpiChange('i-kpi-tbody',2,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="38" placeholder="—" style="color:var(--red)" onchange="onKpiChange('i-kpi-tbody',2,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="34.5" placeholder="—" style="color:var(--red)" onchange="onKpiChange('i-kpi-tbody',2,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="42.3" placeholder="—" style="color:var(--red)" onchange="onKpiChange('i-kpi-tbody',2,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',2,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',2,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',2,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',2,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',2,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',2,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',2,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',2,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≥50%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">0%</span></td></tr><tr><td class="tl">Tickets Reabertos</td><td class="ec"><input class="ci" type="number" step="0.1" value="25" placeholder="—" style="color:var(--red)" onchange="onKpiChange('i-kpi-tbody',3,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="24" placeholder="—" style="color:var(--red)" onchange="onKpiChange('i-kpi-tbody',3,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="28.7" placeholder="—" style="color:var(--red)" onchange="onKpiChange('i-kpi-tbody',3,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="15.9" placeholder="—" style="color:var(--amber)" onchange="onKpiChange('i-kpi-tbody',3,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',3,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',3,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',3,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',3,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',3,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',3,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',3,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',3,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≤15%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">0%</span></td></tr><tr><td class="tl">SLA WhatsApp</td><td class="ec"><input class="ci" type="number" step="0.1" value="29" placeholder="—" style="color:var(--red)" onchange="onKpiChange('i-kpi-tbody',4,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="47" placeholder="—" style="color:var(--red)" onchange="onKpiChange('i-kpi-tbody',4,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="65" placeholder="—" style="color:var(--green)" onchange="onKpiChange('i-kpi-tbody',4,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="62" placeholder="—" style="color:var(--green)" onchange="onKpiChange('i-kpi-tbody',4,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',4,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',4,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',4,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',4,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',4,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',4,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',4,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',4,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≥60%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">40%</span></td></tr><tr><td class="tl">SLA E-mail</td><td class="ec"><input class="ci" type="number" step="0.1" value="86" placeholder="—" style="color:var(--amber)" onchange="onKpiChange('i-kpi-tbody',5,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="97" placeholder="—" style="color:var(--green)" onchange="onKpiChange('i-kpi-tbody',5,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="99" placeholder="—" style="color:var(--green)" onchange="onKpiChange('i-kpi-tbody',5,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="97" placeholder="—" style="color:var(--green)" onchange="onKpiChange('i-kpi-tbody',5,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',5,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',5,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',5,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',5,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',5,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',5,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',5,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('i-kpi-tbody',5,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≥95%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--green);background:var(--gbg)">80%</span></td></tr></tbody>
+  </table><div class="hint">📝 Células em amarelo são editáveis</div></div></div>
+<div id="tab-gabriel" class="panel">  <div style="display:flex;align-items:center;gap:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 22px;margin-bottom:16px;margin-top:4px">
+    <img src="data:image/jpeg;base64,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" style="width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:center top;border:2px solid var(--border);flex-shrink:0">
+    <div>
+      <div style="font-family:'DM Serif Display',serif;font-size:20px">Gabriel Henrique</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">Analista de Experiência do Cliente</div>
+    </div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <button class="btn btn-green" style="font-size:10px;padding:5px 11px" onclick="downloadPersonHTML('g')">💾 Salvar</button>
+      <span id="g-stars" style="font-size:18px;letter-spacing:2px"><span style="color:#f5a623">★</span><span style="color:#f5a623">★</span><span style="color:#f5a623">★</span><span style="display:inline-block;position:relative;color:#e6e3db">★<span style="position:absolute;left:0;top:0;width:25%;overflow:hidden;color:#f5a623">★</span></span><span style="color:#e6e3db">★</span></span>
+      <span class="sec-tag" id="g-period-tag">Mai/26</span>
+    </div>
+  </div>
+  <div class="sec">KPIs Operacionais — <span>Último mês · Gabriel Henrique</span></div>
+  <div class="kpi-row kpi-6" id="g-kpis"><div class="kpi-card none"><div class="kpi-label">Total de Tickets</div><div class="kpi-val none">149</div><div class="kpi-sub">Volume </div></div><div class="kpi-card bad"><div class="kpi-label">Tempo Médio 1ª Resposta</div><div class="kpi-val bad">32 min</div><div class="kpi-sub">≤12 min <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">Resolvidos no 1° Contato</div><div class="kpi-val bad">36,1%</div><div class="kpi-sub">≥50% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">Tickets Reabertos</div><div class="kpi-val bad">105%</div><div class="kpi-sub">≤15% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">SLA WhatsApp</div><div class="kpi-val bad">42%</div><div class="kpi-sub">≥60% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card ok"><div class="kpi-label">SLA E-mail</div><div class="kpi-val ok">100%</div><div class="kpi-sub">≥95% <span class="kbadge ok">✅ Acima</span></div></div></div>
+  <div class="sec">CSAT — <span>Mês Atual · Gabriel Henrique</span></div>
+  <div class="kpi-row kpi-4" id="g-csat-mes-kpis"><div class="kpi-card warn"><div class="kpi-label">CSAT · Mai/26</div><div class="kpi-val warn">83%</div><div class="kpi-sub">Meta ≥90% <span class="kbadge warn">⚠️ Atenção</span></div></div><div class="kpi-card bad"><div class="kpi-label">Negativo · Mai/26</div><div class="kpi-val bad">11%</div><div class="kpi-sub">Meta ≤6% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">Neutro · Mai/26</div><div class="kpi-val bad">6%</div><div class="kpi-sub">Meta ≤4% <span class="kbadge bad">⚠️ Abaixo</span></div></div><div class="kpi-card bad"><div class="kpi-label">Tx. Resp. · Mai/26</div><div class="kpi-val bad">20%</div><div class="kpi-sub">Meta ≥25% <span class="kbadge bad">⚠️ Abaixo</span></div></div></div>
+  <div class="sec">CSAT — <span>Acumulado do Ano · Gabriel Henrique</span></div>
+  <div class="kpi-row kpi-6" id="g-csat-kpis"><div class="kpi-card warn"><div class="kpi-label">CSAT Médio (YTD)</div><div class="kpi-val warn">86.0%</div><div class="kpi-sub">Meta ≥90% <span class="kbadge warn">⚠️ Atenção</span></div></div>
+<div class="kpi-card warn"><div class="kpi-label">Negativo Médio</div><div class="kpi-val warn">6.7%</div><div class="kpi-sub">Meta ≤6% <span class="kbadge warn">⚠️ Atenção</span></div></div>
+<div class="kpi-card bad"><div class="kpi-label">Neutro Médio</div><div class="kpi-val bad">7.3%</div><div class="kpi-sub">Meta ≤4% <span class="kbadge bad">⚠️ Abaixo</span></div></div>
+<div class="kpi-card bad"><div class="kpi-label">Tx. Resposta (YTD)</div><div class="kpi-val bad">15%</div><div class="kpi-sub">Meta ≥25% <span class="kbadge bad">⚠️ Abaixo</span></div></div>
+<div class="kpi-card none"><div class="kpi-label">Total Solicitações</div><div class="kpi-val none">419</div><div class="kpi-sub">Acumulado </div></div>
+<div class="kpi-card none"><div class="kpi-label">Total Respostas</div><div class="kpi-val none">62</div><div class="kpi-sub">Acumulado </div></div></div>
+  <div class="sec">CSAT — <span>Gabriel Henrique · Meta vs Alcançado</span></div>
+  <div class="chart-box">
+    <div class="cblabel"><span class="dot" style="background:#8b4513"></span>CSAT % · Meta ≥90% · Comparativo Mensal</div>
+    <div class="cbsub">Barras = alcançado · Linha tracejada = meta</div>
+    <canvas id="cG_csat" height="100"></canvas>
+  </div>
+  <div class="sec">Tabela CSAT — <span>Gabriel Henrique · 2026</span></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th style="width:60px">Mês</th><th>Solicitações</th><th>Respostas</th><th>Tx. Resp.</th><th>CSAT %</th><th>Neutro %</th><th>Negativo %</th><th>Status</th></tr></thead>
+    <tbody id="g-csat-tbody"><tr class="mrow"><td class="tl">🔴 Meta</td><td class="tv">—</td><td class="tv">—</td>
+    <td class="tv" style="color:var(--amber);font-weight:700">≥25%</td>
+    <td class="tv" style="color:var(--green);font-weight:700">≥90%</td>
+    <td class="tv" style="color:var(--amber);font-weight:700">≤4%</td>
+    <td class="tv" style="color:var(--red);font-weight:700">≤6%</td><td></td></tr><tr><td class="tl">Jan</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',0,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',0,'respostas',this.value)"></td>
+      <td class="tv" id="g-tx-0"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',0,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',0,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',0,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="g-rst-0">—</span></td></tr><tr><td class="tl">Fev</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',1,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',1,'respostas',this.value)"></td>
+      <td class="tv" id="g-tx-1"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',1,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',1,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',1,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="g-rst-1">—</span></td></tr><tr><td class="tl">Mar</td><td class="ec"><input class="ci" type="number" step="1" value="68" placeholder="—" onchange="onCsatChange('g-csat-tbody',2,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="10" placeholder="—" onchange="onCsatChange('g-csat-tbody',2,'respostas',this.value)"></td>
+      <td class="tv" id="g-tx-2"><span class="vbad">15%</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="90" placeholder="—" style="color:var(--green)" onchange="onCsatChange('g-csat-tbody',2,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="10" placeholder="—" style="color:var(--red)" onchange="onCsatChange('g-csat-tbody',2,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="0" placeholder="—" style="color:var(--green)" onchange="onCsatChange('g-csat-tbody',2,'neg',this.value)"></td>
+      <td class="tds"><span class="sb ok" id="g-rst-2">✅ Acima</span></td></tr><tr><td class="tl">Abr</td><td class="ec"><input class="ci" type="number" step="1" value="261" placeholder="—" onchange="onCsatChange('g-csat-tbody',3,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="34" placeholder="—" onchange="onCsatChange('g-csat-tbody',3,'respostas',this.value)"></td>
+      <td class="tv" id="g-tx-3"><span class="vbad">13%</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="85" placeholder="—" style="color:var(--amber)" onchange="onCsatChange('g-csat-tbody',3,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="6" placeholder="—" style="color:var(--red)" onchange="onCsatChange('g-csat-tbody',3,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="9" placeholder="—" style="color:var(--red)" onchange="onCsatChange('g-csat-tbody',3,'neg',this.value)"></td>
+      <td class="tds"><span class="sb warn" id="g-rst-3">⚠️ Atenção</span></td></tr><tr><td class="tl">Mai</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',4,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',4,'respostas',this.value)"></td>
+      <td class="tv" id="g-tx-4"><span class="vbad">20%</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',4,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',4,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',4,'neg',this.value)"></td>
+      <td class="tds"><span class="sb warn" id="g-rst-4">⚠️ Atenção</span></td></tr><tr><td class="tl">Jun</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',5,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',5,'respostas',this.value)"></td>
+      <td class="tv" id="g-tx-5"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',5,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',5,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',5,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="g-rst-5">—</span></td></tr><tr><td class="tl">Jul</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',6,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',6,'respostas',this.value)"></td>
+      <td class="tv" id="g-tx-6"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',6,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',6,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',6,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="g-rst-6">—</span></td></tr><tr><td class="tl">Ago</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',7,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',7,'respostas',this.value)"></td>
+      <td class="tv" id="g-tx-7"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',7,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',7,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',7,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="g-rst-7">—</span></td></tr><tr><td class="tl">Set</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',8,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',8,'respostas',this.value)"></td>
+      <td class="tv" id="g-tx-8"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',8,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',8,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',8,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="g-rst-8">—</span></td></tr><tr><td class="tl">Out</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',9,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',9,'respostas',this.value)"></td>
+      <td class="tv" id="g-tx-9"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',9,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',9,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',9,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="g-rst-9">—</span></td></tr><tr><td class="tl">Nov</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',10,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',10,'respostas',this.value)"></td>
+      <td class="tv" id="g-tx-10"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',10,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',10,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',10,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="g-rst-10">—</span></td></tr><tr><td class="tl">Dez</td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',11,'solic',this.value)"></td><td class="ec"><input class="ci" type="number" step="1" value="" placeholder="—" onchange="onCsatChange('g-csat-tbody',11,'respostas',this.value)"></td>
+      <td class="tv" id="g-tx-11"><span style="color:var(--muted)">—</span></td>
+      <td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',11,'csat',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',11,'neutro',this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onCsatChange('g-csat-tbody',11,'neg',this.value)"></td>
+      <td class="tds"><span class="sb none" id="g-rst-11">—</span></td></tr></tbody>
+  </table><div class="hint">📝 Células em amarelo são editáveis · Tx. Resp. calculada automaticamente</div></div>
+  <div class="sec">Tabela KPIs — <span>Gabriel Henrique · 2026</span></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th style="min-width:160px">Indicador</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th><th>Meta</th><th>Atingimento</th></tr></thead>
+    <tbody id="g-kpi-tbody"><tr><td class="tl">Total de Tickets</td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',0,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',0,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="93" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',0,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="381" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',0,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',0,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',0,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',0,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',0,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',0,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',0,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',0,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',0,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">—</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--muted);background:#f0ede8">—</span></td></tr><tr><td class="tl">Tempo Médio 1ª Resposta</td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',1,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',1,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="54" placeholder="—" style="color:var(--red)" onchange="onKpiChange('g-kpi-tbody',1,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="24" placeholder="—" style="color:var(--red)" onchange="onKpiChange('g-kpi-tbody',1,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',1,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',1,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',1,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',1,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',1,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',1,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',1,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',1,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≤12 min</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">0%</span></td></tr><tr><td class="tl">Resolvidos no 1° Contato</td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',2,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',2,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="29.2" placeholder="—" style="color:var(--red)" onchange="onKpiChange('g-kpi-tbody',2,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="31.9" placeholder="—" style="color:var(--red)" onchange="onKpiChange('g-kpi-tbody',2,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',2,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',2,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',2,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',2,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',2,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',2,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',2,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',2,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≥50%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">0%</span></td></tr><tr><td class="tl">Tickets Reabertos</td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',3,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',3,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="7.7" placeholder="—" style="color:var(--green)" onchange="onKpiChange('g-kpi-tbody',3,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="10.2" placeholder="—" style="color:var(--green)" onchange="onKpiChange('g-kpi-tbody',3,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',3,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',3,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',3,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',3,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',3,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',3,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',3,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',3,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≤15%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--amber);background:var(--ambg)">67%</span></td></tr><tr><td class="tl">SLA WhatsApp</td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',4,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',4,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',4,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="32" placeholder="—" style="color:var(--red)" onchange="onKpiChange('g-kpi-tbody',4,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',4,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',4,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',4,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',4,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',4,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',4,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',4,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',4,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≥60%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--red);background:var(--rbg)">0%</span></td></tr><tr><td class="tl">SLA E-mail</td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',5,0,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',5,1,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',5,2,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="91" placeholder="—" style="color:var(--amber)" onchange="onKpiChange('g-kpi-tbody',5,3,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',5,4,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',5,5,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',5,6,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',5,7,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',5,8,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',5,9,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',5,10,this.value)"></td><td class="ec"><input class="ci" type="number" step="0.1" value="" placeholder="—" style="color:var(--muted)" onchange="onKpiChange('g-kpi-tbody',5,11,this.value)"></td><td class="tv" style="color:var(--t2);font-size:11px">≥95%</td>
+      <td class="tv"><span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--amber);background:var(--ambg)">50%</span></td></tr></tbody>
+  </table><div class="hint">📝 Células em amarelo são editáveis</div></div></div>
+
+<div id="tab-metas" class="panel">
+  <div class="sec" style="margin-top:4px">Resumo Executivo — <span>Metas 2026 Propostas</span></div>
+  <div class="kpi-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+    <div class="meta-card"><div class="kpi-label">CSAT</div>
+      <div class="meta-val">90% <span class="meta-arrow" style="color:var(--green)">▲ 92%</span></div>
+      <div><span class="tag-pill" style="background:var(--gbg);color:var(--green)">Média atual: 88,4%</span></div>
+      <div><span class="tag-pill" style="background:var(--ambg);color:var(--amber)">Mercado: 85–92%</span></div>
+    </div>
+    <div class="meta-card"><div class="kpi-label">1º Contato Resolvido</div>
+      <div class="meta-val">50% <span class="meta-arrow" style="color:var(--red)">▼ 47,3%</span></div>
+      <div><span class="tag-pill" style="background:var(--rbg);color:var(--red)">Média atual: 40,8%</span></div>
+      <div><span class="tag-pill" style="background:var(--ambg);color:var(--amber)">Mercado: 40–55%</span></div>
+    </div>
+    <div class="meta-card"><div class="kpi-label">Tickets Reabertos</div>
+      <div class="meta-val">15% <span class="meta-arrow" style="color:var(--amber)">▲ 21%</span></div>
+      <div><span class="tag-pill" style="background:var(--rbg);color:var(--red)">Média atual: 23,5%</span></div>
+      <div><span class="tag-pill" style="background:var(--ambg);color:var(--amber)">Mercado: 15–25%</span></div>
+    </div>
+    <div class="meta-card"><div class="kpi-label">SLA WhatsApp</div>
+      <div class="meta-val">60% <span class="meta-arrow" style="color:var(--green)">▲ 66%</span></div>
+      <div><span class="tag-pill" style="background:var(--rbg);color:var(--red)">Média atual: 47,5%</span></div>
+      <div><span class="tag-pill" style="background:var(--ambg);color:var(--amber)">Mercado: 60–80%</span></div>
+    </div>
+    <div class="meta-card"><div class="kpi-label">SLA E-mail</div>
+      <div class="meta-val">95% <span class="meta-arrow" style="color:var(--green)">▲ 99%</span></div>
+      <div><span class="tag-pill" style="background:var(--gbg);color:var(--green)">Média atual: 93,3%</span></div>
+      <div><span class="tag-pill" style="background:var(--ambg);color:var(--amber)">Mercado: 90–97%</span></div>
+    </div>
+    <div class="meta-card"><div class="kpi-label">Taxa de Resposta CSAT</div>
+      <div class="meta-val">25% <span class="meta-arrow" style="color:var(--red)">▼ 24%</span></div>
+      <div><span class="tag-pill" style="background:var(--rbg);color:var(--red)">Média atual: 20%</span></div>
+      <div><span class="tag-pill" style="background:var(--ambg);color:var(--amber)">Mercado: 20–35%</span></div>
+    </div>
+    <div class="meta-card"><div class="kpi-label">TMA 1ª Resposta</div>
+      <div class="meta-val">12 min <span class="meta-arrow" style="color:var(--green)">▼ 6 min</span></div>
+      <div><span class="tag-pill" style="background:var(--rbg);color:var(--red)">Média atual: 23 min</span></div>
+      <div><span class="tag-pill" style="background:var(--ambg);color:var(--amber)">Mercado: 5–30 min</span></div>
+    </div>
+  </div>
+  <div class="sec">Detalhamento Comparativo por KPI — <span>Base histórica 2025</span></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr>
+      <th style="min-width:180px;text-align:left;padding-left:14px">KPI</th>
+      <th>Média 6 meses</th><th>Melhor mês</th><th>Benchmark mercado</th><th>Meta 2026</th>
+    </tr></thead>
+    <tbody>
+      <tr><td class="tl">CSAT</td><td class="tv">88,40%</td><td class="tv" style="color:var(--green);font-weight:700">92% <span style="font-size:10px;color:var(--muted);font-weight:400">(out/25)</span></td><td class="tv" style="color:var(--t2)">85–92%</td><td class="tv"><b>90%</b></td></tr>
+      <tr><td class="tl">Resolvidos 1º Contato</td><td class="tv">40,80%</td><td class="tv" style="color:var(--green);font-weight:700">47,3% <span style="font-size:10px;color:var(--muted);font-weight:400">(fev/26)</span></td><td class="tv" style="color:var(--t2)">40–55%</td><td class="tv"><b>50%</b></td></tr>
+      <tr><td class="tl">Tickets Reabertos</td><td class="tv">23,50%</td><td class="tv" style="color:var(--green);font-weight:700">21% <span style="font-size:10px;color:var(--muted);font-weight:400">(out/25)</span></td><td class="tv" style="color:var(--t2)">15–25%</td><td class="tv"><b>15%</b></td></tr>
+      <tr><td class="tl">SLA WhatsApp</td><td class="tv">47,50%</td><td class="tv" style="color:var(--green);font-weight:700">66% <span style="font-size:10px;color:var(--muted);font-weight:400">(set/25)</span></td><td class="tv" style="color:var(--t2)">60–80%</td><td class="tv"><b>60%</b></td></tr>
+      <tr><td class="tl">SLA E-mail</td><td class="tv">93,30%</td><td class="tv" style="color:var(--green);font-weight:700">99% <span style="font-size:10px;color:var(--muted);font-weight:400">(set/25)</span></td><td class="tv" style="color:var(--t2)">90–97%</td><td class="tv"><b>95%</b></td></tr>
+      <tr><td class="tl">Taxa de Resposta (CSAT)</td><td class="tv">20,00%</td><td class="tv" style="color:var(--green);font-weight:700">24% <span style="font-size:10px;color:var(--muted);font-weight:400">(nov/25)</span></td><td class="tv" style="color:var(--t2)">20–35%</td><td class="tv"><b>25%</b></td></tr>
+      <tr><td class="tl">TMA 1ª Resposta</td><td class="tv">23 min</td><td class="tv" style="color:var(--green);font-weight:700">6 min <span style="font-size:10px;color:var(--muted);font-weight:400">(set/25)</span></td><td class="tv" style="color:var(--t2)">5–30 min</td><td class="tv"><b>12 min</b></td></tr>
+    </tbody>
+  </table></div>
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;font-size:11px;color:var(--t2);display:flex;gap:28px;flex-wrap:wrap">
+    <span><b style="color:var(--text)">Meta 2026</b> — objetivo oficial do ano · valor principal do card</span>
+    <span><b style="color:var(--text)">▲ / ▼</b> — melhor resultado histórico registrado</span>
+    <span><b style="color:var(--green)">Verde</b> — Média atual acima da meta</span>
+    <span><b style="color:var(--amber)">Benchmark</b> — faixa de referência do mercado para o segmento</span>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<script>
+const ML=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const SAVE_KEY='cx-dash-2026-v4';
+
+// ── SENHAS DE ACESSO ─────────────────────────────────────────────────────
+// Altere as senhas abaixo antes de distribuir o arquivo
+const ACCESS={
+  admin:    'cx2026admin',    // Acesso total: edição, todas as abas, download
+  t:        'HR7u17yb!',      // Tayna Moura — somente seus indicadores (leitura)
+  i:        '6hJp15AF@',    // Isabela Mesquita — somente seus indicadores (leitura)
+  g:        '2q2J5RJp#'     // Gabriel Henrique — somente seus indicadores (leitura)
+};
+const ROLE_NAMES={t:'Tayna Moura',i:'Isabela Mesquita',g:'Gabriel Henrique'};
+const SESSION_KEY='cx-session-2026';
+
+function n(v){return v!==null&&v!==undefined&&v!==''&&!isNaN(+v);}
+function st(v,meta,dir){
+  if(!n(v)||meta===null)return 'none';
+  const val=+v,m=+meta;
+  return dir==='max'?(val>=m?'ok':val>=m*.9?'warn':'bad'):(val<=m?'ok':val<=m*1.15?'warn':'bad');
+}
+function stLbl(s){return {ok:'✅ Acima',warn:'⚠️ Atenção',bad:'⚠️ Abaixo',none:'—'}[s];}
+function stClr(s){return {ok:'var(--green)',warn:'var(--amber)',bad:'var(--red)',none:'var(--muted)'}[s];}
+function latestFilled(arr){for(let i=arr.length-1;i>=0;i--)if(n(arr[i]))return{val:+arr[i],idx:i};return null;}
+
+function toast(msg,color){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=color||'var(--green)';
+  t.classList.add('show');clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+
+const T_CSAT={meta:{csat:90,neutro:4,neg:6,txResp:25},rows:[
+  {solic:415,respostas:78,csat:91,neutro:3,neg:6},
+  {solic:424,respostas:74,csat:89,neutro:5,neg:5},
+  {solic:436,respostas:85,csat:89,neutro:4,neg:7},
+  {solic:186,respostas:38,csat:92,neutro:3,neg:5},
+  null,null,null,null,null,null,null,null]};
+const T_KPIS=[
+  {id:'tickets',label:'Total de Tickets',meta:null,metaVal:null,dir:'max',unit:'',data:[514,642,605,255,null,null,null,null,null,null,null,null]},
+  {id:'tma',label:'Tempo Médio 1ª Resposta',meta:'≤12 min',metaVal:12,dir:'min',unit:' min',data:[48,29,26,15,null,null,null,null,null,null,null,null]},
+  {id:'fcr',label:'Resolvidos no 1° Contato',meta:'≥50%',metaVal:50,dir:'max',unit:'%',data:[37,37.1,32.9,17.6,null,null,null,null,null,null,null,null]},
+  {id:'reab',label:'Tickets Reabertos',meta:'≤15%',metaVal:15,dir:'min',unit:'%',data:[23.3,23.3,21.4,17.2,null,null,null,null,null,null,null,null]},
+  {id:'slaWp',label:'SLA WhatsApp',meta:'≥60%',metaVal:60,dir:'max',unit:'%',data:[25,33,33,49,null,null,null,null,null,null,null,null]},
+  {id:'slaEmail',label:'SLA E-mail',meta:'≥95%',metaVal:95,dir:'max',unit:'%',data:[90,94,95,100,null,null,null,null,null,null,null,null]}];
+
+const I_CSAT={meta:{csat:90,neutro:4,neg:6,txResp:25},rows:[
+  {solic:446,respostas:58,csat:74,neutro:7,neg:19},
+  {solic:420,respostas:55,csat:71,neutro:8,neg:21},
+  {solic:462,respostas:79,csat:75,neutro:3,neg:23},
+  {solic:185,respostas:18,csat:78,neutro:6,neg:17},
+  null,null,null,null,null,null,null,null]};
+const I_KPIS=[
+  {id:'tickets',label:'Total de Tickets',meta:null,metaVal:null,dir:'max',unit:'',data:[520,510,558,230,null,null,null,null,null,null,null,null]},
+  {id:'tma',label:'Tempo Médio 1ª Resposta',meta:'≤12 min',metaVal:12,dir:'min',unit:' min',data:[50,32,10,6,null,null,null,null,null,null,null,null]},
+  {id:'fcr',label:'Resolvidos no 1° Contato',meta:'≥50%',metaVal:50,dir:'max',unit:'%',data:[35,38,34.5,43.5,null,null,null,null,null,null,null,null]},
+  {id:'reab',label:'Tickets Reabertos',meta:'≤15%',metaVal:15,dir:'min',unit:'%',data:[25,24,28.7,15.9,null,null,null,null,null,null,null,null]},
+  {id:'slaWp',label:'SLA WhatsApp',meta:'≥60%',metaVal:60,dir:'max',unit:'%',data:[29,47,65,60,null,null,null,null,null,null,null,null]},
+  {id:'slaEmail',label:'SLA E-mail',meta:'≥95%',metaVal:95,dir:'max',unit:'%',data:[86,97,99,98,null,null,null,null,null,null,null,null]}];
+
+const G_CSAT={meta:{csat:90,neutro:4,neg:6,txResp:25},rows:[
+  null,null,
+  {solic:68,respostas:10,csat:90,neutro:10,neg:0},
+  {solic:176,respostas:29,csat:79,neutro:3,neg:17},
+  null,null,null,null,null,null,null,null]};
+const G_KPIS=[
+  {id:'tickets',label:'Total de Tickets',meta:null,metaVal:null,dir:'max',unit:'',data:[null,null,93,233,null,null,null,null,null,null,null,null]},
+  {id:'tma',label:'Tempo Médio 1ª Resposta',meta:'≤12 min',metaVal:12,dir:'min',unit:' min',data:[null,null,54,28,null,null,null,null,null,null,null,null]},
+  {id:'fcr',label:'Resolvidos no 1° Contato',meta:'≥50%',metaVal:50,dir:'max',unit:'%',data:[null,null,29.2,27.6,null,null,null,null,null,null,null,null]},
+  {id:'reab',label:'Tickets Reabertos',meta:'≤15%',metaVal:15,dir:'min',unit:'%',data:[null,null,7.7,13.6,null,null,null,null,null,null,null,null]},
+  {id:'slaWp',label:'SLA WhatsApp',meta:'≥60%',metaVal:60,dir:'max',unit:'%',data:[null,null,null,26,null,null,null,null,null,null,null,null]},
+  {id:'slaEmail',label:'SLA E-mail',meta:'≥95%',metaVal:95,dir:'max',unit:'%',data:[null,null,null,89,null,null,null,null,null,null,null,null]}];
+
+
+// ── SAVE / RESTORE ────────────────────────────────
+let AREA_CSAT_OVERRIDE=Array(12).fill(null);
+
+function getData(){
+  return{tc:T_CSAT.rows,tk:T_KPIS.map(k=>k.data),ic:I_CSAT.rows,ik:I_KPIS.map(k=>k.data),gc:G_CSAT.rows,gk:G_KPIS.map(k=>k.data),ao:AREA_CSAT_OVERRIDE};
+}
+function applyData(d){
+  if(d.tc)T_CSAT.rows=d.tc; if(d.tk)d.tk.forEach((v,i)=>T_KPIS[i]&&(T_KPIS[i].data=v));
+  if(d.ic)I_CSAT.rows=d.ic; if(d.ik)d.ik.forEach((v,i)=>I_KPIS[i]&&(I_KPIS[i].data=v));
+  if(d.gc)G_CSAT.rows=d.gc; if(d.gk)d.gk.forEach((v,i)=>G_KPIS[i]&&(G_KPIS[i].data=v));
+  if(d.ao)AREA_CSAT_OVERRIDE=d.ao;
+  // Restore area override inputs
+  if(d.ao)d.ao.forEach((r,i)=>{
+    if(!r)return;
+    ['solic','respostas','csat','neutro','neg'].forEach(f=>{
+      const el=document.querySelector(`#area-csat-tbody tr:nth-child(${i+2}) input[onchange*="'${f}'"]`);
+      if(el&&r[f]!=null)el.value=r[f];
+    });
+  });
+}
+function saveData(name){
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify(getData()));}catch(e){}
+  downloadHTML(name||'cx');
+}
+function saveAndRefresh(){
+  refreshAll();
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify(getData()));}catch(e){}
+  toast('💾 Dados salvos!');
+}
+function restoreData(){
+  try{const raw=localStorage.getItem(SAVE_KEY);if(!raw)return false;applyData(JSON.parse(raw));return true;}
+  catch(e){return false;}
+}
+
+// ── SYNC INPUT VALUE ATTRS (para outerHTML capturar dados corretos) ──
+function syncInputAttrs(){
+  // Parse onchange attr directly — no CSS selector quoting issues
+  document.querySelectorAll('input[onchange^="onCsatChange"]').forEach(function(inp){
+    var m=inp.getAttribute('onchange').match(/onCsatChange\('([^']+)',(\d+),'([^']+)'/);
+    if(!m)return;
+    var map={'t-csat-tbody':T_CSAT.rows,'i-csat-tbody':I_CSAT.rows,'g-csat-tbody':G_CSAT.rows};
+    var rows=map[m[1]],idx=+m[2],field=m[3];
+    inp.setAttribute('value',(rows&&rows[idx]&&rows[idx][field]!=null)?rows[idx][field]:'');
+  });
+  document.querySelectorAll('input[onchange^="onKpiChange"]').forEach(function(inp){
+    var m=inp.getAttribute('onchange').match(/onKpiChange\('([^']+)',(\d+),(\d+)/);
+    if(!m)return;
+    var map={'t-kpi-tbody':T_KPIS,'i-kpi-tbody':I_KPIS,'g-kpi-tbody':G_KPIS};
+    var kpis=map[m[1]];var ki=+m[2];var mi=+m[3];
+    inp.setAttribute('value',(kpis&&kpis[ki]&&kpis[ki].data[mi]!=null)?kpis[ki].data[mi]:'');
+  });
+}
+
+// ── DOWNLOAD COMPLETO ─────────────────────────────────
+function downloadHTML(name){
+  name=name||'cx';
+  syncInputAttrs();
+  var src=document.documentElement.outerHTML;
+  ['cA_csat:90','cT_csat:100','cI_csat:100','cG_csat:100'].forEach(function(x){
+    var s=x.split(':');src=src.replace(new RegExp('<canvas id="'+s[0]+'"[^>]*>','g'),'<canvas id="'+s[0]+'" height="'+s[1]+'">');
+  });
+  // indexOf-based snap replace — no regex, no script-close issues
+  var newSnap='(function(){window.__snap='+JSON.stringify(getData())+';})()'
+  var ms=src.indexOf('id="cx-snap"');
+  if(ms>=0){var ce=src.indexOf('>',ms)+1;var te=src.indexOf('<',ce);src=src.slice(0,ce)+newSnap+src.slice(te);}
+  var blob=new Blob([src],{type:'text/html;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='dashboard_'+name+'.html';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
+  toast('\uD83D\uDCBE Salvo!');
+}
+
+// ── CHART INSTANCES ──────────────────────────────────
+const _charts={};
+Chart.register(ChartDataLabels);
+function renderChart(canvasId,rows){
+  const ctx=document.getElementById(canvasId);
+  if(!ctx)return;
+  if(_charts[canvasId]){_charts[canvasId].destroy();delete _charts[canvasId];}
+  const vals=rows.map(r=>r&&n(r.csat)?+r.csat:null);
+  const bg=vals.map(v=>v===null?'transparent':v>=90?'#2f7a3b33':'#c0392b33');
+  const bd=vals.map(v=>v===null?'transparent':v>=90?'#2f7a3b':'#c0392b');
+  _charts[canvasId]=new Chart(ctx,{
+    type:'bar',
+    data:{labels:ML,datasets:[
+      {type:'bar',label:'CSAT %',data:vals,backgroundColor:bg,borderColor:bd,borderWidth:1.5,borderRadius:3},
+      {type:'line',label:'Meta 90%',data:Array(12).fill(90),borderColor:'#c0392b',borderDash:[4,4],borderWidth:1.5,pointRadius:0,fill:false,tension:0}
+    ]},
+    options:{responsive:true,maintainAspectRatio:true,
+      plugins:{
+        legend:{display:false},
+        datalabels:{
+          display:(c)=>c.datasetIndex===0&&c.parsed&&c.parsed.y!=null,
+          anchor:'center',
+          align:'center',
+          clamp:true,
+          clip:false,
+          color:'#7a776f',
+          font:{weight:'700',size:11,family:"'DM Sans',sans-serif"},
+          formatter:(v)=>v!=null?v+'%':''
+        }
+      },
+      scales:{y:{min:40,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0ede6'}},x:{grid:{display:false}}}
+    }
+  });
+}
+
+// ── AREA OVERRIDE HANDLER ─────────────────────────────
+function onAreaCsatOverride(idx,field,val){
+  if(!AREA_CSAT_OVERRIDE[idx])AREA_CSAT_OVERRIDE[idx]={solic:null,respostas:null,csat:null,neutro:null,neg:null};
+  AREA_CSAT_OVERRIDE[idx][field]=val===''?null:+val;
+  const r=AREA_CSAT_OVERRIDE[idx];
+  if(!n(r.solic)&&!n(r.respostas)&&!n(r.csat)&&!n(r.neutro)&&!n(r.neg))AREA_CSAT_OVERRIDE[idx]=null;
+  const ar=computeAreaCsat();
+  renderTxStatus('area',ar);
+  renderCsatSummary(null,'area-csat-kpis',ar,'area-csat-tag');
+  renderChart('cA_csat',ar);
+}
+
+// ── AREA AGGREGATION ──────────────────────────────────
+function computeAreaCsat(){
+  return Array.from({length:12},(_,i)=>{
+    // Use manual override if CSAT is filled
+    const ov=AREA_CSAT_OVERRIDE[i];
+    if(ov&&n(ov.csat))return ov;
+    // Fall back to T+I+G weighted aggregation
+    const parts=[T_CSAT.rows[i],I_CSAT.rows[i],G_CSAT.rows[i]].filter(r=>r&&n(r.solic));
+    if(!parts.length)return null;
+    const solic=parts.reduce((a,r)=>a+(+r.solic),0);
+    const resp=parts.reduce((a,r)=>a+(+r.respostas),0);
+    if(!resp)return{solic,respostas:resp,csat:null,neutro:null,neg:null};
+    const wCsat=Math.round(parts.reduce((a,r)=>a+(+r.csat)*(+r.respostas),0)/resp*10)/10;
+    const wNeutro=Math.round(parts.reduce((a,r)=>a+(+r.neutro)*(+r.respostas),0)/resp*10)/10;
+    const wNeg=Math.round(parts.reduce((a,r)=>a+(+r.neg)*(+r.respostas),0)/resp*10)/10;
+    return{solic,respostas:resp,csat:wCsat,neutro:wNeutro,neg:wNeg};
+  });
+}
+function computeAreaKpis(){
+  return T_KPIS.map((k,ki)=>{
+    const vals=Array.from({length:12},(_,mi)=>{
+      const td=T_KPIS[ki].data[mi],id=I_KPIS[ki].data[mi],gd=G_KPIS[ki].data[mi];
+      const parts=[[td,T_KPIS[0].data[mi]],[id,I_KPIS[0].data[mi]],[gd,G_KPIS[0].data[mi]]].filter(p=>n(p[0]));
+      if(!parts.length)return null;
+      if(ki===0)return parts.reduce((a,p)=>a+(+p[0]),0);
+      const totalT=parts.filter(p=>n(p[1])).reduce((a,p)=>a+(+p[1]),0);
+      if(!totalT)return parts.reduce((a,p)=>a+(+p[0]),0)/parts.length;
+      return Math.round(parts.filter(p=>n(p[1])).reduce((a,p)=>a+(+p[0])*(+p[1]),0)/totalT*10)/10;
+    });
+    return{...k,data:vals};
+  });
+}
+
+// ── KPI CARDS ─────────────────────────────────────────
+function fmt(v,unit){if(!n(v))return '—';const x=+v;return(x%1===0?x:x.toFixed(1).replace('.',','))+unit;}
+function renderKpiCards(elId,KPIS,tagId){
+  const el=document.getElementById(elId);if(!el)return;
+  const latest=KPIS.map(k=>latestFilled(k.data));
+  const latestIdx=latest.reduce((a,x)=>x?Math.max(a,x.idx):a,-1);
+  if(tagId&&latestIdx>=0){const t=document.getElementById(tagId);if(t)t.textContent=ML[latestIdx]+'/26';}
+  el.innerHTML=KPIS.map((k,i)=>{
+    const lf=latest[i];
+    if(!lf)return`<div class="kpi-card none"><div class="kpi-label">${k.label}</div><div class="kpi-val none">—</div><div class="kpi-sub">Volume </div></div>`;
+    const s=st(lf.val,k.metaVal,k.dir);
+    const sub=k.meta?`${k.meta} <span class="kbadge ${s}">${stLbl(s)}</span>`:'Volume ';
+    return`<div class="kpi-card ${s}"><div class="kpi-label">${k.label}</div><div class="kpi-val ${s}">${fmt(lf.val,k.unit)}</div><div class="kpi-sub">${sub}</div></div>`;
+  }).join('');
+}
+
+// ── CSAT SUMMARY CARDS ────────────────────────────────
+function renderCsatSummary(mesId,ytdId,rows,periodId){
+  const filled=rows.filter(r=>r&&n(r.csat));
+  const latestIdx=rows.reduce((a,r,i)=>r&&n(r.csat)?i:a,-1);
+  if(periodId&&latestIdx>=0){const t=document.getElementById(periodId);if(t)t.textContent=ML[latestIdx]+'/26';}
+  const lr=filled.length?filled[filled.length-1]:null;
+  if(mesId&&lr){
+    const el=document.getElementById(mesId);if(!el)return;
+    const tx=n(lr.solic)&&+lr.solic>0?Math.round(+lr.respostas/+lr.solic*100):null;
+    const mo=ML[latestIdx]+'/26';
+    el.innerHTML=[
+      {l:'CSAT · '+mo,v:n(lr.csat)?lr.csat+'%':'—',s:st(lr.csat,90,'max'),m:'Meta ≥90%'},
+      {l:'Negativo · '+mo,v:n(lr.neg)?lr.neg+'%':'—',s:st(lr.neg,6,'min'),m:'Meta ≤6%'},
+      {l:'Neutro · '+mo,v:n(lr.neutro)?lr.neutro+'%':'—',s:st(lr.neutro,4,'min'),m:'Meta ≤4%'},
+      {l:'Tx. Resp. · '+mo,v:n(tx)?tx+'%':'—',s:st(tx,25,'max'),m:'Meta ≥25%'}
+    ].map(c=>`<div class="kpi-card ${c.s}"><div class="kpi-label">${c.l}</div><div class="kpi-val ${c.s}">${c.v}</div><div class="kpi-sub">${c.m} <span class="kbadge ${c.s}">${stLbl(c.s)}</span></div></div>`).join('');
+  }
+  if(ytdId&&filled.length){
+    const el=document.getElementById(ytdId);if(!el)return;
+    const ts=filled.reduce((a,r)=>a+(n(r.solic)?+r.solic:0),0);
+    const tr2=filled.reduce((a,r)=>a+(n(r.respostas)?+r.respostas:0),0);
+    const ac=filled.reduce((a,r)=>a+(+r.csat),0)/filled.length;
+    const an=filled.reduce((a,r)=>a+(+r.neg),0)/filled.length;
+    const ant=filled.reduce((a,r)=>a+(+r.neutro),0)/filled.length;
+    const tx2=ts>0?Math.round(tr2/ts*100):null;
+    const sC=st(ac,90,'max'),sN=st(an,6,'min'),sNt=st(ant,4,'min'),sTx=st(tx2,25,'max');
+    el.innerHTML=`<div class="kpi-card ${sC}"><div class="kpi-label">CSAT Médio (YTD)</div><div class="kpi-val ${sC}">${ac.toFixed(1)}%</div><div class="kpi-sub">Meta ≥90% <span class="kbadge ${sC}">${stLbl(sC)}</span></div></div>
+<div class="kpi-card ${sN}"><div class="kpi-label">Negativo Médio</div><div class="kpi-val ${sN}">${an.toFixed(1)}%</div><div class="kpi-sub">Meta ≤6% <span class="kbadge ${sN}">${stLbl(sN)}</span></div></div>
+<div class="kpi-card ${sNt}"><div class="kpi-label">Neutro Médio</div><div class="kpi-val ${sNt}">${ant.toFixed(1)}%</div><div class="kpi-sub">Meta ≤4% <span class="kbadge ${sNt}">${stLbl(sNt)}</span></div></div>
+<div class="kpi-card ${sTx}"><div class="kpi-label">Tx. Resposta (YTD)</div><div class="kpi-val ${sTx}">${n(tx2)?tx2+'%':'—'}</div><div class="kpi-sub">Meta ≥25% <span class="kbadge ${sTx}">${stLbl(sTx)}</span></div></div>
+<div class="kpi-card none"><div class="kpi-label">Total Solicitações</div><div class="kpi-val none">${ts.toLocaleString('pt-BR')}</div><div class="kpi-sub">Acumulado </div></div>
+<div class="kpi-card none"><div class="kpi-label">Total Respostas</div><div class="kpi-val none">${tr2.toLocaleString('pt-BR')}</div><div class="kpi-sub">Acumulado </div></div>`;
+  }
+}
+
+// ── TX + STATUS COLUMNS ───────────────────────────────
+function renderTxStatus(prefix,rows){
+  for(let i=0;i<12;i++){
+    const r=rows[i];
+    const txEl=document.getElementById(prefix+'-tx-'+i);
+    const rstEl=document.getElementById(prefix+'-rst-'+i);
+    if(txEl){
+      if(r&&n(r.solic)&&+r.solic>0){const tx=Math.round(+r.respostas/+r.solic*100);const s=st(tx,25,'max');txEl.innerHTML=`<span class="${s==='ok'?'vok':s==='bad'?'vbad':'vwarn'}">${tx}%</span>`;}
+      else txEl.innerHTML='<span style="color:var(--muted)">—</span>';
+    }
+    if(rstEl){
+      if(r&&n(r.csat)){const s=st(r.csat,90,'max');rstEl.className='sb '+s;rstEl.textContent=stLbl(s);}
+      else{rstEl.className='sb none';rstEl.textContent='—';}
+    }
+  }
+}
+
+// ── STARS ─────────────────────────────────────────────
+function renderStars(elId,rows){
+  const el=document.getElementById(elId);if(!el)return;
+  const filled=rows.filter(r=>r&&n(r.csat));if(!filled.length)return;
+  const avg=filled.reduce((a,r)=>a+(+r.csat),0)/filled.length;
+  const stars=Math.min(5,Math.max(0,(avg-60)/8));
+  let h='';
+  for(let i=1;i<=5;i++){
+    if(stars>=i)h+=`<span style="color:#f5a623">★</span>`;
+    else if(stars>i-1){const p=Math.round((stars-(i-1))*100);h+=`<span style="display:inline-block;position:relative;color:#e6e3db">★<span style="position:absolute;left:0;top:0;width:${p}%;overflow:hidden;color:#f5a623">★</span></span>`;}
+    else h+=`<span style="color:#e6e3db">★</span>`;
+  }
+  el.innerHTML=h;
+}
+
+// ── KPI ACHIEVEMENT COLUMN ────────────────────────────
+function renderKpiAchievement(tbodyId,KPIS){
+  const tbody=document.getElementById(tbodyId);if(!tbody)return;
+  tbody.querySelectorAll('tr').forEach((tr,ki)=>{
+    if(ki>=KPIS.length)return;
+    const k=KPIS[ki];const cells=tr.querySelectorAll('td');const ac=cells[cells.length-1];if(!ac)return;
+    const filled=k.data.filter(v=>n(v));
+    if(!filled.length||k.metaVal===null){ac.innerHTML='<span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--muted);background:#f0ede8">—</span>';return;}
+    const met=filled.filter(v=>st(v,k.metaVal,k.dir)==='ok').length;
+    const pct=Math.round(met/filled.length*100);
+    const s=pct>=75?'ok':pct>=50?'warn':'bad';
+    const clr={ok:'color:var(--green);background:var(--gbg)',warn:'color:var(--amber);background:var(--ambg)',bad:'color:var(--red);background:var(--rbg)'};
+    ac.innerHTML=`<span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;${clr[s]}">${pct}%</span>`;
+  });
+}
+
+// ── AREA KPI TABLE ─────────────────────────────────────
+function renderAreaKpiTable(){
+  const aK=computeAreaKpis();
+  const tbody=document.getElementById('area-kpi-tbody');if(!tbody)return;
+  tbody.querySelectorAll('tr').forEach((tr,ki)=>{
+    if(ki>=T_KPIS.length)return;
+    const k=T_KPIS[ki];const data=aK[ki]?aK[ki].data:[];
+    const cells=tr.querySelectorAll('td');
+    for(let mi=0;mi<12;mi++){
+      const cell=cells[mi+1];if(!cell)continue;
+      const v=data[mi];
+      if(!n(v)){cell.textContent='—';cell.className='tv';cell.style.color='var(--muted)';continue;}
+      const s=st(v,k.metaVal,k.dir);cell.className='tv';cell.style.color=stClr(s);cell.textContent=fmt(v,k.unit);
+    }
+    const ac=cells[cells.length-1];if(!ac)return;
+    const filled=data.filter(v=>n(v));
+    if(!filled.length||k.metaVal===null){ac.innerHTML='<span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;color:var(--muted);background:#f0ede8">—</span>';return;}
+    const met=filled.filter(v=>st(v,k.metaVal,k.dir)==='ok').length;
+    const pct=Math.round(met/filled.length*100);
+    const s=pct>=75?'ok':pct>=50?'warn':'bad';
+    const clr={ok:'color:var(--green);background:var(--gbg)',warn:'color:var(--amber);background:var(--ambg)',bad:'color:var(--red);background:var(--rbg)'};
+    ac.innerHTML=`<span style="display:inline-flex;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;${clr[s]}">${pct}%</span>`;
+  });
+}
+
+// ── ON CHANGE ─────────────────────────────────────────
+function onCsatChange(tbodyId,idx,field,val){
+  const map={
+    't-csat-tbody':{DATA:T_CSAT,pre:'t',color:'#2f7a3b',chart:'cT_csat'},
+    'i-csat-tbody':{DATA:I_CSAT,pre:'i',color:'#5570a0',chart:'cI_csat'},
+    'g-csat-tbody':{DATA:G_CSAT,pre:'g',color:'#8b4513',chart:'cG_csat'}
+  };
+  const ctx=map[tbodyId];if(!ctx)return;
+  if(!ctx.DATA.rows[idx])ctx.DATA.rows[idx]={solic:null,respostas:null,csat:null,neutro:null,neg:null};
+  ctx.DATA.rows[idx][field]=val===''?null:+val;
+  // Recolor the input itself (skip META row)
+  const tb=document.getElementById(tbodyId);
+  if(tb){const trs=Array.from(tb.querySelectorAll('tr')).filter(tr=>!tr.classList.contains('mrow'));if(trs[idx]){const inp=trs[idx].querySelector(`input[onchange*="'${field}'"]`);if(inp)inp.style.color=csatInpClr(field,val===''?null:+val);}}
+  renderTxStatus(ctx.pre,ctx.DATA.rows);
+  renderChart(ctx.chart,ctx.DATA.rows);
+  renderCsatSummary(ctx.pre+'-csat-mes-kpis',ctx.pre+'-csat-kpis',ctx.DATA.rows,ctx.pre+'-period-tag');
+  renderStars(ctx.pre+'-stars',ctx.DATA.rows);
+  const ar=computeAreaCsat();renderTxStatus('area',ar);
+  renderCsatSummary(null,'area-csat-kpis',ar,'area-csat-tag');
+  renderChart('cA_csat',ar);
+}
+function onKpiChange(tbodyId,kpiIdx,colIdx,val){
+  const map={
+    't-kpi-tbody':{KPIS:T_KPIS,pre:'t'},
+    'i-kpi-tbody':{KPIS:I_KPIS,pre:'i'},
+    'g-kpi-tbody':{KPIS:G_KPIS,pre:'g'}
+  };
+  const ctx=map[tbodyId];if(!ctx)return;
+  ctx.KPIS[kpiIdx].data[colIdx]=val===''?null:+val;
+  // Recolor the input itself
+  const tb=document.getElementById(tbodyId);
+  if(tb){const rows=tb.querySelectorAll('tr');if(rows[kpiIdx]){const inps=rows[kpiIdx].querySelectorAll('input.ci');if(inps[colIdx]){const k=ctx.KPIS[kpiIdx];const v=val===''?null:+val;inps[colIdx].style.color=n(v)?(k.metaVal!==null?stClr(st(v,k.metaVal,k.dir)):'var(--text)'):'var(--muted)';}}}
+  renderKpiCards(ctx.pre+'-kpis',ctx.KPIS,ctx.pre+'-period-tag');
+  renderKpiAchievement(tbodyId,ctx.KPIS);
+  const aK=computeAreaKpis();renderKpiCards('area-kpis',aK,'area-kpi-tag');
+  renderAreaKpiTable();
+}
+
+// ── REFRESH ALL ───────────────────────────────────────
+function refreshAll(){
+  // Tayna
+  renderKpiCards('t-kpis',T_KPIS,'t-period-tag');
+  renderCsatSummary('t-csat-mes-kpis','t-csat-kpis',T_CSAT.rows,'t-period-tag');
+  renderTxStatus('t',T_CSAT.rows);renderStars('t-stars',T_CSAT.rows);
+  renderKpiAchievement('t-kpi-tbody',T_KPIS);
+  // Isabela
+  renderKpiCards('i-kpis',I_KPIS,'i-period-tag');
+  renderCsatSummary('i-csat-mes-kpis','i-csat-kpis',I_CSAT.rows,'i-period-tag');
+  renderTxStatus('i',I_CSAT.rows);renderStars('i-stars',I_CSAT.rows);
+  renderKpiAchievement('i-kpi-tbody',I_KPIS);
+  // Gabriel
+  renderKpiCards('g-kpis',G_KPIS,'g-period-tag');
+  renderCsatSummary('g-csat-mes-kpis','g-csat-kpis',G_CSAT.rows,'g-period-tag');
+  renderTxStatus('g',G_CSAT.rows);renderStars('g-stars',G_CSAT.rows);
+  renderKpiAchievement('g-kpi-tbody',G_KPIS);
+  // Area
+  const aK=computeAreaKpis();renderKpiCards('area-kpis',aK,'area-kpi-tag');
+  renderAreaKpiTable();
+  const ar=computeAreaCsat();
+  renderCsatSummary(null,'area-csat-kpis',ar,'area-csat-tag');
+  renderTxStatus('area',ar);
+  // Charts: only render active tab to avoid canvas=0 issues
+  const active=document.querySelector('.panel.active');
+  if(active){
+    const id=active.id;
+    if(id==='tab-area')renderChart('cA_csat',ar);
+    else if(id==='tab-tayna')renderChart('cT_csat',T_CSAT.rows);
+    else if(id==='tab-isabela')renderChart('cI_csat',I_CSAT.rows);
+    else if(id==='tab-gabriel')renderChart('cG_csat',G_CSAT.rows);
+  }
+}
+
+// ── SHOW TAB ──────────────────────────────────────────
+function showTab(tabName,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const panel=document.getElementById('tab-'+tabName);
+  if(panel)panel.classList.add('active');
+  if(el)el.classList.add('active');
+  setTimeout(()=>{
+    const ar=computeAreaCsat();
+    if(tabName==='area')renderChart('cA_csat',ar);
+    else if(tabName==='tayna')renderChart('cT_csat',T_CSAT.rows);
+    else if(tabName==='isabela')renderChart('cI_csat',I_CSAT.rows);
+    else if(tabName==='gabriel')renderChart('cG_csat',G_CSAT.rows);
+  },30);
+}
+
+// ── DOWNLOAD ALL INDIVIDUALS ──────────────────────────
+function downloadAll(){
+  var order=['t','i','g'];
+  var names={t:'Tayna',i:'Isabela',g:'Gabriel'};
+  var idx=0;
+  function next(){
+    if(idx>=order.length){setTimeout(function(){toast('✅ 3 arquivos baixados!');},300);return;}
+    var p=order[idx];idx++;
+    toast('⏳ Gerando dashboard_'+names[p].toLowerCase()+'.html...');
+    setTimeout(function(){downloadPersonHTML(p);setTimeout(next,1200);},200);
+  }
+  next();
+}
+
+// ── INDIVIDUAL PERSON DOWNLOAD ──────────────────────────────────────────
+function downloadPersonHTML(pre){
+  var NM={t:'tayna',i:'isabela',g:'gabriel'};
+  var FN={t:'Tayna Moura',i:'Isabela Mesquita',g:'Gabriel Henrique'};
+  var nm=NM[pre],fn=FN[pre];
+  var cid='c'+pre.toUpperCase()+'_csat';
+  var ctb=pre+'-csat-tbody',ktb=pre+'-kpi-tbody';
+  var CV=pre==='t'?'T_CSAT':pre==='i'?'I_CSAT':'G_CSAT';
+  var KV=pre==='t'?'T_KPIS':pre==='i'?'I_KPIS':'G_KPIS';
+  var CR=pre==='t'?T_CSAT.rows:pre==='i'?I_CSAT.rows:G_CSAT.rows;
+  var KS=pre==='t'?T_KPIS:pre==='i'?I_KPIS:G_KPIS;
+  var rk=pre+'c',kk=pre+'k';
+
+  // 1. Snap com apenas os dados desta pessoa
+  var pd={};pd[rk]=CR;pd[kk]=KS.map(function(k){return k.data;});
+
+  // 2. HTML base com canvases e snap corrigidos
+  syncInputAttrs();
+  var src=document.documentElement.outerHTML;
+  ['cA_csat:90','cT_csat:100','cI_csat:100','cG_csat:100'].forEach(function(x){
+    var p2=x.split(':'),cid2=p2[0],h=p2[1];
+    src=src.replace(new RegExp('<canvas id="'+cid2+'"[^>]*>','g'),'<canvas id="'+cid2+'" height="'+h+'">');
+  });
+  var itag='<scr'+'ipt id="cx-snap">(function(){window.__snap='+JSON.stringify(pd)+';})()</sc'+'ript>';
+  src=src.replace(new RegExp('<scr'+'ipt id="cx-snap">[\\s\\S]*?</sc'+'ript>'),itag);
+
+  // 3. Sincroniza values dos inputs no HTML
+  function pInput(sig,val){
+    var esc=sig.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    src=src.replace(new RegExp('(<input[^>]+'+esc+'[^>]*?)value="[^"]*"'),'$1value="'+val+'"');
+    src=src.replace(new RegExp('(<input[^>]+value=")[^"]*("[^>]+'+esc+')'),'$1'+val+'$2');
+  }
+  CR.forEach(function(r,idx){
+    if(!r)return;
+    ['solic','respostas','csat','neutro','neg'].forEach(function(f){
+      if(!n(r[f]))return;
+      pInput('onchange="onCsatChange(\''+ctb+'\','+idx+',\''+f+'\',this.value)"',r[f]);
+    });
+  });
+  KS.forEach(function(k,ki){
+    k.data.forEach(function(v,ci){
+      if(!n(v))return;
+      pInput('onchange="onKpiChange(\''+ktb+'\','+ki+','+ci+',this.value)"',v);
+    });
+  });
+
+  // 4. Manipulação DOM via DOMParser — remove painéis e estruturas desnecessárias
+  var parser=new DOMParser();
+  var doc2=parser.parseFromString(src,'text/html');
+  doc2.title='Dashboard CX \xB7 '+fn+' \xB7 2026';
+  var ht=doc2.querySelector('.htitle');if(ht)ht.textContent='CX Analytics \xB7 '+fn;
+  var hs=doc2.querySelector('.hsub');if(hs)hs.textContent='Meus Indicadores \xB7 '+fn+' \xB7 2026';
+
+  // Remove barra de abas
+  var nav=doc2.querySelector('nav.tabs');if(nav)nav.remove();
+
+  // Mantém apenas o painel desta pessoa, remove os demais
+  doc2.querySelectorAll('.panel').forEach(function(p){
+    if(p.id!=='tab-'+pre)p.remove();
+    else p.classList.add('active');
+  });
+
+  // Remove botões: Salvar (saveAndRefresh), Baixar todos, Baixar individual
+  doc2.querySelectorAll('button').forEach(function(b){
+    var oc=b.getAttribute('onclick')||'';
+    if(oc.indexOf('saveAndRefresh')>=0||oc.indexOf('downloadAll')>=0||oc.indexOf('downloadPersonHTML')>=0)b.remove();
+  });
+
+  // Renomeia botão de salvar para contexto individual
+  var hb=doc2.querySelector('button[onclick*="saveData"]');
+  if(hb){hb.setAttribute('onclick','saveData()');hb.innerHTML='\uD83D\uDCBE Salvar meus dados';}
+
+  // Info bar: remove fundo amarelo e atualiza texto
+  var infoBar=doc2.querySelector('header span[style*="--yc"]');
+  if(infoBar){infoBar.style.background='var(--s2)';infoBar.textContent='\uD83D\uDCCA Visualiza\u00e7\u00e3o individual \xB7 apenas seus dados';}
+
+  // Células editáveis → somente leitura (fundo cinza)
+  doc2.querySelectorAll('td.ec').forEach(function(td){td.style.background='var(--s2)';});
+  doc2.querySelectorAll('input.ci').forEach(function(inp){inp.style.background='var(--s2)';inp.style.pointerEvents='none';});
+
+  // 5. Script de override injetado no body — sobrescreve init/refreshAll/saveData/showTab
+  var ov=[
+    // showTab sempre ativa o painel desta pessoa (bloqueia o showTab original)
+    'function showTab(){',
+      'document.querySelectorAll(".panel").forEach(function(p){p.classList.remove("active");});',
+      'var p=document.getElementById("tab-'+pre+'");if(p)p.classList.add("active");',
+    '}',
+    'function refreshAll(){',
+      'renderKpiCards("'+pre+'-kpis",'+KV+',"'+pre+'-period-tag");',
+      'renderCsatSummary("'+pre+'-csat-mes-kpis","'+pre+'-csat-kpis",'+CV+'.rows,"'+pre+'-period-tag");',
+      'renderTxStatus("'+pre+'",'+CV+'.rows);',
+      'renderStars("'+pre+'-stars",'+CV+'.rows);',
+      'renderKpiAchievement("'+pre+'-kpi-tbody",'+KV+');',
+    '}',
+    'function saveData(){',
+      'var d2={};d2["'+rk+'"]='+CV+'.rows;d2["'+kk+'"]='+KV+'.map(function(k){return k.data;});',
+      'try{localStorage.setItem(SAVE_KEY,JSON.stringify(d2));}catch(e){}',
+      'var it2=\'<scr\'+\'ipt id="cx-snap">(function(){window.__snap=\'+JSON.stringify(d2)+\';})()</sc\'+\'ript>\';',
+      'var s2=document.documentElement.outerHTML;',
+      's2=s2.replace(/<canvas id="'+cid+'"[^>]*>/g,\'<canvas id="'+cid+'" height="100">\');',
+      's2=s2.replace(new RegExp(\'<scr\'+\'ipt id="cx-snap">[\\\\s\\\\S]*?</sc\'+\'ript>\'),it2);',
+      'var bl=new Blob([s2],{type:"text/html;charset=utf-8"});',
+      'var a=document.createElement("a");a.href=URL.createObjectURL(bl);',
+      'a.download="dashboard_'+nm+'.html";',
+      'document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);',
+      'toast("\uD83D\uDCBE dashboard_'+nm+'.html salvo!");',
+    '}',
+    'function init(){',
+      'if(window.__snap)applyData(window.__snap);',
+      // Ativa o painel imediatamente
+      'var panel=document.getElementById("tab-'+pre+'");if(panel)panel.classList.add("active");',
+      'refreshAll();restoreInputs();',
+      // Re-ativa após 150ms para garantir que sobrescreve qualquer showTab do init original
+      'setTimeout(function(){',
+        'var p2=document.getElementById("tab-'+pre+'");if(p2)p2.classList.add("active");',
+        'renderChart("'+cid+'",'+CV+'.rows);',
+      '},150);',
+    '}',
+    'window.addEventListener("DOMContentLoaded",init);'
+  ].join('\n');
+  var os=doc2.createElement('script');
+  os.textContent=ov;
+  doc2.body.appendChild(os);
+
+  // 6. Download do arquivo individual
+  var finalH='<!DOCTYPE html>\n'+doc2.documentElement.outerHTML;
+  var blob=new Blob([finalH],{type:'text/html;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='dashboard_'+nm+'.html';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(a.href);
+  toast('\uD83D\uDCBE dashboard_'+nm+'.html baixado!');
+}
+
+
+function csatInpClr(field,val){
+  // Returns color string based on field meta: green=ok, red=bad, text=neutral
+  if(!n(val))return'var(--muted)';
+  const v=+val;
+  if(field==='csat')return v>=90?'var(--green)':'var(--red)';
+  if(field==='neutro')return v<=4?'var(--green)':'var(--red)';
+  if(field==='neg')return v<=6?'var(--green)':'var(--red)';
+  return'var(--text)';
+}
+
+function restoreInputs(){
+  // Sync all input DOM values from JS data arrays + apply meta coloring
+  // NOTE: skip the first tr (META row with class mrow)
+  [[T_CSAT.rows,'t-csat-tbody'],[I_CSAT.rows,'i-csat-tbody'],[G_CSAT.rows,'g-csat-tbody']].forEach(([rows,tbId])=>{
+    const tb=document.getElementById(tbId);if(!tb)return;
+    const fields=['solic','respostas','csat','neutro','neg'];
+    const trs=Array.from(tb.querySelectorAll('tr')).filter(tr=>!tr.classList.contains('mrow'));
+    trs.forEach((tr,i)=>{
+      if(!rows[i])return;
+      fields.forEach(f=>{
+        const inp=tr.querySelector(`input[onchange*="'${f}'"]`);
+        if(inp){
+          const v=rows[i][f];
+          inp.value=n(v)?v:'';
+          inp.style.color=csatInpClr(f,v);
+        }
+      });
+    });
+  });
+  [[T_KPIS,'t-kpi-tbody'],[I_KPIS,'i-kpi-tbody'],[G_KPIS,'g-kpi-tbody']].forEach(([KPIS,tbId])=>{
+    const tb=document.getElementById(tbId);if(!tb)return;
+    tb.querySelectorAll('tr').forEach((tr,ki)=>{
+      if(ki>=KPIS.length)return;
+      tr.querySelectorAll('input.ci').forEach((inp,mi)=>{
+        const v=KPIS[ki].data[mi];
+        inp.value=n(v)?v:'';
+        inp.style.color=n(v)?(KPIS[ki].metaVal!==null?stClr(st(v,KPIS[ki].metaVal,KPIS[ki].dir)):'var(--text)'):'var(--muted)';
+      });
+    });
+  });
+}
+
+// ── LOGIN / CONTROLE DE ACESSO ────────────────────────
+function doLogin(){
+  var pw=(document.getElementById('cx-pw').value||'').trim();
+  var role=null;
+  for(var k in ACCESS){if(ACCESS[k]===pw){role=k;break;}}
+  if(!role){
+    document.getElementById('cx-err').style.display='block';
+    document.getElementById('cx-pw').value='';
+    document.getElementById('cx-pw').focus();
+    return;
+  }
+  document.getElementById('cx-err').style.display='none';
+  applyRole(role);
+}
+
+function applyRole(role){
+  document.getElementById('cx-login').style.display='none';
+  document.getElementById('cx-logout').style.display='';
+
+  if(role==='admin'){
+    // Acesso total — renderiza tudo e ativa aba Área
+    refreshAll();
+    restoreInputs();
+    // Ativa painel e aba diretamente, sem dependência de querySelector
+    document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+    var ap=document.getElementById('tab-area');if(ap)ap.classList.add('active');
+    document.querySelectorAll('.tab').forEach(function(t){
+      if((t.getAttribute('onclick')||'').indexOf("'area'")>=0)t.classList.add('active');
+    });
+    setTimeout(function(){var ar=computeAreaCsat();renderChart('cA_csat',ar);},80);
+    return;
+  }
+
+  // ── Modo analista ──────────────────────────────────
+  var cv=role==='t'?T_CSAT.rows:role==='i'?I_CSAT.rows:G_CSAT.rows;
+  var kv=role==='t'?T_KPIS:role==='i'?I_KPIS:G_KPIS;
+  var tabName={t:'tayna',i:'isabela',g:'gabriel'}[role];
+
+  // 1. Ativa o painel correto ANTES de renderizar
+  var nav=document.querySelector('nav.tabs');if(nav)nav.style.display='none';
+  document.querySelectorAll('.panel').forEach(function(p){
+    p.classList.remove('active');
+    if(p.id==='tab-'+tabName)p.classList.add('active');
+  });
+
+  // 2. Usa refreshAll (mesmo que admin) para garantir todos os dados atualizados
+  refreshAll();
+  restoreInputs();
+
+  // 3. Header
+  var hs=document.querySelector('.hsub');
+  if(hs)hs.textContent='Meus Indicadores \xB7 '+ROLE_NAMES[role]+' \xB7 2026';
+  var bar=document.querySelector('header span[style*="--yc"]');
+  if(bar){bar.style.background='var(--s2)';bar.textContent='\uD83D\uDCCA Visualiza\u00e7\u00e3o individual \xB7 apenas seus dados';}
+
+  // 4. Esconde botões de admin
+  ['saveAndRefresh','downloadAll','saveData','downloadPersonHTML'].forEach(function(fn){
+    document.querySelectorAll('button[onclick*="'+fn+'"]').forEach(function(b){b.style.display='none';});
+  });
+
+  // 5. Células somente leitura
+  document.querySelectorAll('td.ec').forEach(function(td){td.style.background='var(--s2)';});
+  document.querySelectorAll('input.ci').forEach(function(inp){
+    inp.style.background='var(--s2)';inp.style.pointerEvents='none';inp.setAttribute('readonly','');
+  });
+}
+
+function doLogout(){
+  location.reload();
+}
+
+// ── INIT ──────────────────────────────────────────────
+function init(){
+  if(window.__snap)applyData(window.__snap);
+  restoreData();
+  // Sempre exibe o login ao abrir o arquivo
+  document.getElementById('cx-login').style.display='flex';
+  setTimeout(function(){var pw=document.getElementById('cx-pw');if(pw)pw.focus();},150);
+}
+window.addEventListener('DOMContentLoaded',init);
+</script>
+</body></html>
